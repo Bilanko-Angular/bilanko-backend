@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
     @PostMapping("/create")
     public ResponseEntity <Product> create(){
-
+        return ResponseEntity.ok().build();
     }
 }
