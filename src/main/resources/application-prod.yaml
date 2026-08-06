@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ton-projet.neon.tech/bilanko?sslmode=require
+    username: ton_user_neon
+    password: ${DB_PASSWORD}

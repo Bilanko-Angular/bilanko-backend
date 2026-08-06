@@ -1,4 +1,4 @@
-package com.backend.bilanko.controller.object;
+package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.models.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
