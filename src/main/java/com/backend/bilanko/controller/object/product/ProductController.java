@@ -3,7 +3,7 @@ package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
-import com.backend.bilanko.utils.constant.ApiRoutes;
+import com.backend.bilanko.utils.constant.ProductApiRoutes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiRoutes.PRODUCT8)
+@RequestMapping(ProductApiRoutes.PRODUCT8)
 public class ProductController {
 
     private final ProductServices productServices;
@@ -23,7 +23,7 @@ public class ProductController {
 
     // ── CREATE ─────────────────────────────────────────────────────────────
     // POST /api/products/create
-    @PostMapping(ApiRoutes.PRODUCTS_CREATE)
+    @PostMapping(ProductApiRoutes.PRODUCTS_CREATE)
     public ResponseEntity<Product> create(
             @RequestBody ProductDTO productDTO,
             Authentication authentication) {
@@ -35,27 +35,27 @@ public class ProductController {
 
     // ── READ ───────────────────────────────────────────────────────────────
     // GET /api/products/all  →  tous les produits (catalogue public)
-    @GetMapping(ApiRoutes.PRODUCTS_ALL)
+    @GetMapping(ProductApiRoutes.PRODUCTS_ALL)
     public ResponseEntity<List<Product>> findAll() {
         return ResponseEntity.ok(productServices.findAll());
     }
 
     // GET /api/products/my  →  uniquement les produits du user connecté
-    @GetMapping(ApiRoutes.PRODUCTS_MY)
+    @GetMapping(ProductApiRoutes.PRODUCTS_MY)
     public ResponseEntity<List<Product>> findMyProducts(Authentication authentication) {
         String email = authentication.getName();
         return ResponseEntity.ok(productServices.findMyProducts(email));
     }
 
     // GET /api/products/{id}  →  un produit précis par ID
-    @GetMapping(ApiRoutes.PRODUCTS_BY_ID)
+    @GetMapping(ProductApiRoutes.PRODUCTS_BY_ID)
     public ResponseEntity<Product> findById(@PathVariable long id) {
         return ResponseEntity.ok(productServices.findById(id));
     }
 
     // ── UPDATE ─────────────────────────────────────────────────────────────
     // PUT /api/products/{id}  →  seul le propriétaire peut modifier
-    @PutMapping(ApiRoutes.PRODUCTS_UPDATE)
+    @PutMapping(ProductApiRoutes.PRODUCTS_UPDATE)
     public ResponseEntity<Product> update(
             @PathVariable long id,
             @RequestBody ProductDTO productDTO,
@@ -68,7 +68,7 @@ public class ProductController {
 
     // ── DELETE ─────────────────────────────────────────────────────────────
     // DELETE /api/products/{id}  →  seul le propriétaire peut supprimer
-    @DeleteMapping(ApiRoutes.PRODUCTS_DELETE)
+    @DeleteMapping(ProductApiRoutes.PRODUCTS_DELETE)
     public ResponseEntity<Void> delete(
             @PathVariable long id,
             Authentication authentication) {

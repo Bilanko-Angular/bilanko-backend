@@ -101,7 +101,7 @@ public class ProductServicesImpl implements ProductServices {
         }
     }
 
-    protected Product buildProduct(ProductDTO dto, User user) {
+    private Product buildProduct(ProductDTO dto, User user) {
         List<Category> categories = dto.idCategories()
                 .map(categoryRepository::findAllById)
                 .orElseGet(List::of);

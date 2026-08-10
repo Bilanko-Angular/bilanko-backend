@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public record ProductDTO(
-        long id,
         String name,
         @PositiveOrZero
         int quantity,
