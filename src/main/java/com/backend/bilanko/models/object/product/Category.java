@@ -1,4 +1,4 @@
-package com.backend.bilanko.models;
+package com.backend.bilanko.models.object.product;
 
 import jakarta.persistence.*;
 
