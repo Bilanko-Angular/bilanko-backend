@@ -6,7 +6,6 @@ import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.repository.product.CategoryRepository;
 import com.backend.bilanko.repository.product.ProductRepository;
-import com.backend.bilanko.repository.UserRepository;
 import com.backend.bilanko.services.person.UserServices;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,6 +68,7 @@ public class ProductServicesImpl implements ProductServices {
 
         existing.setName(productDTO.name());
         existing.setPrice(productDTO.price());
+        existing.setPurchasePrice(productDTO.purchasePrice());
         existing.setQuantity(productDTO.quantity());
         existing.setCategories(categories);
 
@@ -105,6 +105,7 @@ public class ProductServicesImpl implements ProductServices {
         return Product.builder()
                 .name(dto.name())
                 .price(dto.price())
+                .purchasePrice(dto.purchasePrice())
                 .quantity(dto.quantity())
                 .categories(categories)
                 .user(user)

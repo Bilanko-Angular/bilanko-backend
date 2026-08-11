@@ -24,6 +24,8 @@ public class Product {
     private int quantity;
     @Min(0)
     private double price;
+    @Min(0)
+    private double purchasePrice;
 
     @ManyToMany
     private List<Category> categories;

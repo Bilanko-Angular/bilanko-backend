@@ -11,5 +11,7 @@ public record ProductDTO(
         int quantity,
         @PositiveOrZero
         double price,
-        Optional<List<Long>> idCategories
+        Optional<List<Long>> idCategories,
+        @PositiveOrZero
+        double purchasePrice
 ) {}
