@@ -7,6 +7,7 @@ import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.repository.product.CategoryRepository;
 import com.backend.bilanko.repository.product.ProductRepository;
 import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.services.person.UserServices;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,15 @@ import java.util.List;
 public class ProductServicesImpl implements ProductServices {
 
     public final ProductRepository repo;
-    public final UserRepository userRepository;
+    public final UserServices userServices;
     public final CategoryRepository categoryRepository;
+
 
     // ── CREATE ──────────────────────────────────────────────────
 
     @Override
     public Product create(ProductDTO productDTO, String email) {
-        User user = findUserByEmail(email);
+        User user = userServices.findUserByEmail(email);
         Product product = buildProduct(productDTO, user);
         return repo.save(product);
     }
@@ -41,7 +43,7 @@ public class ProductServicesImpl implements ProductServices {
     @Override
     public List<Product> findMyProducts(String email) {
         // Vérifie que le user existe, puis retourne ses produits
-        findUserByEmail(email);
+        userServices.findUserByEmail(email);
         return repo.findByUserEmail(email);
     }
 
@@ -86,12 +88,6 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     // ── HELPERS ──────────────────────────────────────────────────
-
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Utilisateur introuvable : " + email));
-    }
 
     /** Lève 403 si le user connecté n'est pas le propriétaire du produit. */
     private void checkOwnership(Product product, String email) {
