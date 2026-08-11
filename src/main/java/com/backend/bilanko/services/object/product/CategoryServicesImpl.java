@@ -46,9 +46,7 @@ public class CategoryServicesImpl implements CategoryServices {
     public Category update(long id, CategoryDTO categoryDTO, String email) {
         requireAdmin(email);
         Category existing = findById(id);
-        List<Product> products = categoryDTO.idProducts()
-                .map(productRepository::findAllById)
-                .orElseGet(List::of);
+        List<Product> products = productRepository.findAllById(categoryDTO.idProducts());
         existing.setName(categoryDTO.name());
         existing.setProducts(products);
         return categoryRepository.save(existing);
@@ -70,9 +68,7 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     private Category buildCategory(CategoryDTO categoryDTO) {
-        List<Product> products = categoryDTO.idProducts()
-                .map(productRepository::findAllById)
-                .orElseGet(List::of);
+        List<Product> products = productRepository.findAllById(categoryDTO.idProducts());
         return Category.builder()
                 .name(categoryDTO.name())
                 .products(products)

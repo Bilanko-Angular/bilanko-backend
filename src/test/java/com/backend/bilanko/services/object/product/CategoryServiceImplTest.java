@@ -55,7 +55,7 @@ class CategoryServiceImplTest {
     // Business Rule 1: Product belongs to a single merchant
     @Test
     void testCreateCategory_Merchant_Failure() {
-        CategoryDTO dto = new CategoryDTO("New Category", Optional.empty());
+        CategoryDTO dto = new CategoryDTO("New Category", null);
         when(userServices.confirmRoleByEmail(eq(Role.ADMIN), anyString())).thenReturn(false);
 
         assertThrows(ResponseStatusException.class, () ->
@@ -65,7 +65,7 @@ class CategoryServiceImplTest {
     @Test
     void testCreateCategory_RegularUser_Failure() {
         when(userServices.confirmRoleByEmail(Role.ADMIN, "regular@email.com")).thenReturn(false);
-        CategoryDTO dto = new CategoryDTO("Test", Optional.empty());
+        CategoryDTO dto = new CategoryDTO("Test", null);
 
         assertThrows(Exception.class, () -> 
             categoryService.create(dto, "regular@email.com"));
@@ -104,7 +104,7 @@ class CategoryServiceImplTest {
     @Test
     void testUpdateCategory_RegularUser_Failure() {
         when(userServices.confirmRoleByEmail(Role.ADMIN, "regular@email.com")).thenReturn(false);
-        CategoryDTO dto = new CategoryDTO("Test", Optional.empty());
+        CategoryDTO dto = new CategoryDTO("Test", null);
 
         assertThrows(Exception.class, () -> 
             categoryService.update(1L, dto, "regular@email.com"));
@@ -147,7 +147,7 @@ class CategoryServiceImplTest {
         when(productRepository.findAllById(Arrays.asList(1L, 2L)))
                 .thenReturn(Arrays.asList(product1, product2));
 
-        CategoryDTO dto = new CategoryDTO("Category With Products", Optional.of(Arrays.asList(1L, 2L)));
+        CategoryDTO dto = new CategoryDTO("Category With Products", Arrays.asList(1L, 2L));
         Category result = categoryService.create(dto, "admin@email.com");
 
         assertEquals(2, result.getProducts().size());
@@ -162,9 +162,14 @@ class CategoryServiceImplTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(Category.builder().build()));
         when(productRepository.findAllById(List.of(3L))).thenReturn(Collections.singletonList(existingProduct));
 
-        CategoryDTO dto = new CategoryDTO("Updated With Product", Optional.of(List.of(3L)));
+        // STUBBING MANQUANT : On indique à Mockito de retourner la catégorie qu'on enregistre
+        when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        CategoryDTO dto = new CategoryDTO("Updated With Product", List.of(3L));
         Category result = categoryService.update(1L, dto, "admin@email.com");
 
+        assertNotNull(result, "Le résultat de l'update ne doit pas être null");
+        assertNotNull(result.getProducts());
         assertEquals(1, result.getProducts().size());
         assertEquals(existingProduct, result.getProducts().getFirst());
     }
@@ -190,7 +195,7 @@ class CategoryServiceImplTest {
         when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.of(mockedCategory));
 
         Category result = categoryService.findById(1L);
-
+        assertNotNull(result);
         assertEquals(mockedCategory, result);
     }
 }
