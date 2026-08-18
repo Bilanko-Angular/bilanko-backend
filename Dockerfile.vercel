@@ -16,15 +16,12 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Création d'un utilisateur non-root pour la sécurité
-RUN addgroup -S spring && adduser -S spring -G spring
+# Création d'un utilisateur non-root pour la sécurité (UID/GID explicite comme dans FastAPI)
+RUN addgroup -S spring -g 1000 && adduser -S spring -u 1000 -G spring
 USER spring:spring
 
-# Copie du JAR compilé depuis l'étape 1
+# Copie du JAR compilé
 COPY --from=build /app/target/*.jar app.jar
 
-# Exposition du port de l'application
-EXPOSE 8080
-
-# Lancement avec limitation de mémoire JVM
-ENTRYPOINT ["java", "-Xmx384m", "-jar", "app.jar"]
+# Lancement compatible avec le port dynamique de Vercel
+ENTRYPOINT ["sh", "-c", "java -Xmx384m -Dserver.port=${PORT:-8080} -jar app.jar"]
