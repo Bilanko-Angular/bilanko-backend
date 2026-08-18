@@ -24,4 +24,4 @@ USER spring:spring
 COPY --from=build /app/target/*.jar app.jar
 
 # Lancement compatible avec le port dynamique de Vercel
-ENTRYPOINT ["sh", "-c", "java -Xmx384m -Dserver.port=${PORT:-8080} -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Xmx384m -Dserver.address=0.0.0.0 -Dserver.port=${PORT:-8080} -jar app.jar"]
