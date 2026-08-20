@@ -1,4 +1,4 @@
-package com.backend.bilanko.controller.concept.transaction;
+package com.backend.bilanko.models.transaction;
 
 import com.backend.bilanko.models.person.User;
 import jakarta.persistence.*;
