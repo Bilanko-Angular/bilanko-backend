@@ -8,6 +8,8 @@ import java.util.Optional;
 public record ProductDTO(
         String name,
         @PositiveOrZero
+        Integer alertThreshold,
+        @PositiveOrZero
         int quantity,
         @PositiveOrZero
         double price,
