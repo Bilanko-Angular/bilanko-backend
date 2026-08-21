@@ -80,6 +80,8 @@ public class ProductServicesImpl implements ProductServices {
         existing.setPurchasePrice(productDTO.purchasePrice());
         existing.setQuantity(productDTO.quantity());
         existing.setCategories(categories);
+        // Update alert threshold if provided
+        existing.setAlertThreshold(productDTO.alertThreshold());
 
         return repo.save(existing);
     }

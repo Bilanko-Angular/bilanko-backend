@@ -117,7 +117,6 @@ class ProductServicesImplTest {
 
         ProductDTO updateDTO = new ProductDTO("Updated Product", 2, 3, 14.99, Optional.empty(), 8.00);
 
-        when(userServices.findUserByEmail(email)).thenReturn(merchant);
         when(repo.findById(productId)).thenReturn(Optional.of(existingProduct));
         when(repo.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
 
