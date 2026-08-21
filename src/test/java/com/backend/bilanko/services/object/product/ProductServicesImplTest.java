@@ -68,7 +68,7 @@ class ProductServicesImplTest {
         User merchant = buildUser(email);
 
         // ProductDTO(name, quantity, price, idCategories, purchasePrice)
-        ProductDTO inputDTO = new ProductDTO("New Product", 10, 29.99, Optional.empty(), 15.00);
+        ProductDTO inputDTO = new ProductDTO("New Product", 5, 10, 29.99, Optional.empty(), 15.00);
 
         when(userServices.findUserByEmail(email)).thenReturn(merchant);
         // Renvoie l'objet exact passé à save()
@@ -82,6 +82,9 @@ class ProductServicesImplTest {
         assertEquals("New Product", result.getName());
         assertEquals(29.99, result.getPrice());
         assertEquals(merchant, result.getUser());
+        assertNotNull(result.getReference());
+        assertNotNull(result.getCreatedAt());
+        assertEquals(5, result.getAlertThreshold());
     }
 
     @Test
@@ -93,7 +96,7 @@ class ProductServicesImplTest {
                 .thenThrow(new ResponseStatusException(
                         org.springframework.http.HttpStatus.NOT_FOUND, "User not found"));
 
-        ProductDTO inputDTO = new ProductDTO("Any Product", 1, 9.99, Optional.empty(), 5.00);
+        ProductDTO inputDTO = new ProductDTO("Any Product", null, 1, 9.99, Optional.empty(), 5.00);
 
         // Act & Assert
         assertThrows(RuntimeException.class, () ->
@@ -112,7 +115,7 @@ class ProductServicesImplTest {
 
         Product existingProduct = buildProduct(productId, "Old Name", 10.00, merchant);
 
-        ProductDTO updateDTO = new ProductDTO("Updated Product", 3, 14.99, Optional.empty(), 8.00);
+        ProductDTO updateDTO = new ProductDTO("Updated Product", 2, 3, 14.99, Optional.empty(), 8.00);
 
         when(userServices.findUserByEmail(email)).thenReturn(merchant);
         when(repo.findById(productId)).thenReturn(Optional.of(existingProduct));
@@ -125,6 +128,7 @@ class ProductServicesImplTest {
         assertNotNull(result);
         assertEquals("Updated Product", result.getName());
         assertEquals(14.99, result.getPrice(), 0.01);
+        assertEquals(2, result.getAlertThreshold());
     }
 
     @Test
@@ -137,7 +141,7 @@ class ProductServicesImplTest {
         User owner = buildUser(ownerEmail);
         Product existingProduct = buildProduct(productId, "My Product", 10.00, owner);
 
-        ProductDTO updateDTO = new ProductDTO("Hacked Product", 1, 1.00, Optional.empty(), 0.50);
+        ProductDTO updateDTO = new ProductDTO("Hacked Product", null, 1, 1.00, Optional.empty(), 0.50);
 
         when(repo.findById(productId)).thenReturn(Optional.of(existingProduct));
 

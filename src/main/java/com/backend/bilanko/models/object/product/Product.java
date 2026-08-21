@@ -4,6 +4,8 @@ import com.backend.bilanko.models.person.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -31,6 +33,16 @@ public class Product {
     private List<Category> categories;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
+
+    // New fields
+    @Column(nullable = false, unique = true)
+    private String reference;
+
+    private Integer alertThreshold;
+
+    @Column(nullable = false, updatable = false)
+    private java.time.LocalDateTime createdAt;
 
 }

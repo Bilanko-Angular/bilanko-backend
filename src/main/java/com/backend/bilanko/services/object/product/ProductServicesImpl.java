@@ -29,7 +29,16 @@ public class ProductServicesImpl implements ProductServices {
     public Product create(ProductDTO productDTO, String email) {
         User user = userServices.findUserByEmail(email);
         Product product = buildProduct(productDTO, user);
-        return repo.save(product);
+        // Save first to obtain ID
+        Product saved = repo.save(product);
+        // Set reference and timestamps
+        saved.setReference(generateReference(saved.getName(), saved.getId(), saved.getUser().getId()));
+        saved.setCreatedAt(java.time.LocalDateTime.now());
+        // Set alert threshold if provided
+        if (productDTO.alertThreshold() != null) {
+            saved.setAlertThreshold(productDTO.alertThreshold());
+        }
+        return repo.save(saved);
     }
 
     // ── READ ─────────────────────────────────────────────────────
@@ -111,5 +120,10 @@ public class ProductServicesImpl implements ProductServices {
                 .user(user)
                 .build();
     }
+    private String generateReference(String name, long productId, long userId) {
+        String prefix = name.length() >= 3 ? name.substring(0, 3).toUpperCase() : name.toUpperCase();
+        return prefix + "-" + productId + "-" + userId;
+    }
 }
+
 
