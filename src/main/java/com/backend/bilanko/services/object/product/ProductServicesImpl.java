@@ -22,6 +22,11 @@ public class ProductServicesImpl implements ProductServices {
     public final UserServices userServices;
     public final CategoryRepository categoryRepository;
 
+    private String generateReference(String name, long userId) {
+        String prefix = name.length() >= 3 ? name.substring(0, 3).toUpperCase() : name.toUpperCase();
+        long timestamp = System.currentTimeMillis();
+        return prefix + "-" + userId + "-" + timestamp;
+    }
 
     // ── CREATE ──────────────────────────────────────────────────
 
@@ -29,16 +34,16 @@ public class ProductServicesImpl implements ProductServices {
     public Product create(ProductDTO productDTO, String email) {
         User user = userServices.findUserByEmail(email);
         Product product = buildProduct(productDTO, user);
-        // Save first to obtain ID
-        Product saved = repo.save(product);
-        // Set reference and timestamps
-        saved.setReference(generateReference(saved.getName(), saved.getId(), saved.getUser().getId()));
-        saved.setCreatedAt(java.time.LocalDateTime.now());
-        // Set alert threshold if provided
+
+        // Génère la référence AVANT le save (pas besoin de l'ID)
+        product.setReference(generateReference(product.getName(), user.getId()));
+
         if (productDTO.alertThreshold() != null) {
-            saved.setAlertThreshold(productDTO.alertThreshold());
+            product.setAlertThreshold(productDTO.alertThreshold());
         }
-        return repo.save(saved);
+
+        // Un seul save suffit maintenant — createdAt géré par @PrePersist
+        return repo.save(product);
     }
 
     // ── READ ─────────────────────────────────────────────────────
