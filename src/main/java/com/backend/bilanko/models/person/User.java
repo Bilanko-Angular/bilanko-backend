@@ -31,6 +31,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column
+    private String profilePictureUrl;
 
     // --- Méthodes requises par UserDetails ---
 
