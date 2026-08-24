@@ -97,6 +97,12 @@
             <artifactId>google-api-client</artifactId>
             <version>2.9.0</version>
         </dependency>
+
+        <!-- Spring Boot Mail (envoi OTP mot de passe oublié) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

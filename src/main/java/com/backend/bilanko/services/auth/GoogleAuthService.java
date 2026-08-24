@@ -26,7 +26,7 @@ public class GoogleAuthService {
     private final JWTServices jwtServices;
 
     public GoogleAuthService(UserRepository userRepository, JWTServices jwtServices,
-                             @Value("${google.client-id}") String googleClientId) {
+                             @Value("${GOOGLE_CLIENT}") String googleClientId) {
         this.userRepository = userRepository;
         this.jwtServices = jwtServices;
         this.verifier = new GoogleIdTokenVerifier.Builder(
