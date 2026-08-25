@@ -1,7 +1,7 @@
 package com.backend.bilanko.utils.constant;
 
 
-public class CategoryApiRoutes {
+public final class CategoryApiRoutes {
     private CategoryApiRoutes() {}
     public static final String category        = "/api/categories";
     public static final String create_category = "/create";          // POST   /api/categories/create

@@ -1,8 +1,6 @@
 package com.backend.bilanko.utils.constant;
 
-import java.lang.reflect.Array;
-
-public class ProductApiRoutes {
+public final class ProductApiRoutes {
     private ProductApiRoutes() {}
     public static final String PRODUCT8          = "/api/products";
     public static final String PRODUCTS_CREATE   = "/create";           // POST   /api/products/create
