@@ -1,8 +1,6 @@
 package com.backend.bilanko.utils.constant;
 
-import java.lang.reflect.Array;
-
-public class ProductApiRoutes {
+public final class ProductApiRoutes {
     private ProductApiRoutes() {}
     public static final String PRODUCT8          = "/api/products";
     public static final String PRODUCTS_CREATE   = "/create";           // POST   /api/products/create
@@ -11,5 +9,6 @@ public class ProductApiRoutes {
     public static final String PRODUCTS_BY_ID    = "/{id}";             // GET    /api/products/{id}
     public static final String PRODUCTS_UPDATE   = "/{id}";             // PUT    /api/products/{id}
     public static final String PRODUCTS_DELETE   = "/{id}";             // DELETE /api/products/{id}
+    public static final String PRODUCTS_SEARCH   = "/search";           // GET /api/products/search
 }
 

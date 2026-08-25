@@ -24,6 +24,12 @@ public class JWTServices {
         return  buildToken(new HashMap<>(),userDetails,jwtExpiration);
     }
 
+    /** Génère un token avec des claims personnalisés et une durée de vie spécifique (en ms) */
+    public String generateTokenWithExpiration(Map<String, Object> extraClaims, UserDetails userDetails, long expirationMs) {
+        return buildToken(extraClaims, userDetails, expirationMs);
+    }
+
+
     private String buildToken(Map<String,Object> extraClaims, UserDetails userDetails,long expiration){
         return Jwts.builder()
                 .claims(extraClaims)

@@ -4,6 +4,7 @@ import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
 import com.backend.bilanko.utils.constant.ProductApiRoutes;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -76,6 +77,20 @@ public class ProductController {
         String email = authentication.getName();
         productServices.delete(id, email);
         return ResponseEntity.noContent().build();  // 204 No Content
+    }
+    // GET /api/products/search?search=&categoryId=&stockStatus=&page=0&size=10
+    @GetMapping(ProductApiRoutes.PRODUCTS_SEARCH)
+    public ResponseEntity<Page<Product>> search(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String stockStatus,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+        Page<Product> result = productServices.searchMyProducts(email, search, categoryId, stockStatus, page, size);
+        return ResponseEntity.ok(result);
     }
 }
 

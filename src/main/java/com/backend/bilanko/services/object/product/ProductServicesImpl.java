@@ -8,6 +8,11 @@ import com.backend.bilanko.repository.product.CategoryRepository;
 import com.backend.bilanko.repository.product.ProductRepository;
 import com.backend.bilanko.services.person.UserServices;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +22,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ProductServicesImpl implements ProductServices {
-
     public final ProductRepository repo;
     public final UserServices userServices;
     public final CategoryRepository categoryRepository;
@@ -103,6 +107,20 @@ public class ProductServicesImpl implements ProductServices {
         repo.delete(existing);
     }
 
+    @Override
+    public Page<Product> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size) {
+        userServices.findUserByEmail(email); // vérifie l'existence
+
+        Specification<Product> spec = ProductSpecification.combine(
+                ProductSpecification.belongsToUser(email),
+                ProductSpecification.nameContains(search),
+                ProductSpecification.hasCategory(categoryId),
+                ProductSpecification.hasStockStatus(stockStatus)
+        );
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return repo.findAll(spec, pageable);
+    }
     // ── HELPERS ──────────────────────────────────────────────────
 
     /** Lève 403 si le user connecté n'est pas le propriétaire du produit. */
@@ -131,6 +149,7 @@ public class ProductServicesImpl implements ProductServices {
         String prefix = name.length() >= 3 ? name.substring(0, 3).toUpperCase() : name.toUpperCase();
         return prefix + "-" + productId + "-" + userId;
     }
+
 }
 
 
