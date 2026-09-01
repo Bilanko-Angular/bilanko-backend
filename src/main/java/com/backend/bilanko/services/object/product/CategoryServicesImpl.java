@@ -1,6 +1,7 @@
 package com.backend.bilanko.services.object.product;
 
 import com.backend.bilanko.DTO.object.product.CategoryDTO;
+import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.Role;
@@ -41,6 +42,13 @@ public class CategoryServicesImpl implements CategoryServices {
                         HttpStatus.NOT_FOUND, "Catégorie introuvable : id=" + id));
     }
 
+    @Override
+    public List<CleanCategoryDTO> getCategoriesByNames(List<String> names) {
+        return categoryRepository.findByNameIn(names)
+                .stream()
+                .map(cat -> new CleanCategoryDTO(cat.getId(), cat.getName()))
+                .toList();
+    }
     // ── UPDATE ───────────────────────────────────────────────────────────────
     @Override
     public Category update(long id, CategoryDTO categoryDTO, String email) {

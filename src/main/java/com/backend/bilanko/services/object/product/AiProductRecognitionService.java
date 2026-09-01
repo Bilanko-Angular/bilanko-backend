@@ -13,6 +13,7 @@ import org.springframework.util.MimeTypeUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class AiProductRecognitionService {
                 .toList();
 
         Media imageMedia = new Media(
-                MimeTypeUtils.parseMimeType(image.getContentType()),
+                MimeTypeUtils.parseMimeType(Objects.requireNonNull(image.getContentType())),
                 toResource(image)
         );
 

@@ -1,7 +1,9 @@
 package com.backend.bilanko.controller.object.product;
 
+import com.backend.bilanko.DTO.object.product.ProductDescriptionClean;
 import com.backend.bilanko.DTO.object.product.ProductRecognitionResponseDTO;
 import com.backend.bilanko.services.object.product.AiProductRecognitionService;
+import com.backend.bilanko.services.object.product.CategoryServices;
 import com.backend.bilanko.utils.constant.AiApiRoutes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class AiProductController {
 
     private final AiProductRecognitionService aiProductRecognitionService;
+    private final CategoryServices categoryServices;
 
     @PostMapping(value = AiApiRoutes.RECOGNIZE_PRODUCT, consumes = "multipart/form-data")
-    public ResponseEntity<ProductRecognitionResponseDTO> recognizeProduct(
+    public ResponseEntity<ProductDescriptionClean> recognizeProduct(
             @RequestParam("image") MultipartFile image) {
-        return ResponseEntity.ok(aiProductRecognitionService.recognize(image));
+        ProductRecognitionResponseDTO aiReconise = aiProductRecognitionService.recognize(image);
+        return ResponseEntity.ok(ProductDescriptionClean.builder()
+                    .name(aiReconise.suggestedName())
+                    .price(aiReconise.suggestedPrice())
+                    .quantity(0)
+                    .categoryDTOS(categoryServices.getCategoriesByNames(aiReconise.matchedCategoryNames()))
+                    .suggestCategories(aiReconise.newCategorySuggestions())
+                .build()
+        );
     }
 }
