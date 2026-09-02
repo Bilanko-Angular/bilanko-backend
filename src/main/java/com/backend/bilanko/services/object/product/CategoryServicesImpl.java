@@ -43,8 +43,11 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
-    public List<Category> searchByName(String name) {
-        return categoryRepository.findByNameContainingIgnoreCase(name);
+    public List<CleanCategoryDTO> searchByName(String name) {
+        return categoryRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(cat -> new CleanCategoryDTO(cat.getId(), cat.getName()))
+                .toList();
     }
 
     @Override
