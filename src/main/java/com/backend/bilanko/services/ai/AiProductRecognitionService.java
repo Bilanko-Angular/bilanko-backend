@@ -1,6 +1,6 @@
-package com.backend.bilanko.services.object.product;
+package com.backend.bilanko.services.ai;
 
-import com.backend.bilanko.DTO.object.product.ProductRecognitionResponseDTO;
+import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.repository.product.CategoryRepository;
 import lombok.RequiredArgsConstructor;

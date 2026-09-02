@@ -1,5 +1,6 @@
-package com.backend.bilanko.DTO.object.product;
+package com.backend.bilanko.DTO.ai;
 
+import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 
@@ -13,5 +14,6 @@ public record ProductDescriptionClean(
         @PositiveOrZero
         double price,
         List<CleanCategoryDTO> categoryDTOS,
-        List<String> suggestCategories
+        List<String> suggestCategories,
+        String comments
 ) {}

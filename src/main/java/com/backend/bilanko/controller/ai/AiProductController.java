@@ -1,8 +1,8 @@
-package com.backend.bilanko.controller.object.product;
+package com.backend.bilanko.controller.ai;
 
-import com.backend.bilanko.DTO.object.product.ProductDescriptionClean;
-import com.backend.bilanko.DTO.object.product.ProductRecognitionResponseDTO;
-import com.backend.bilanko.services.object.product.AiProductRecognitionService;
+import com.backend.bilanko.DTO.ai.ProductDescriptionClean;
+import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
+import com.backend.bilanko.services.ai.AiProductRecognitionService;
 import com.backend.bilanko.services.object.product.CategoryServices;
 import com.backend.bilanko.utils.constant.AiApiRoutes;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ public class AiProductController {
                     .quantity(0)
                     .categoryDTOS(categoryServices.getCategoriesByNames(aiReconise.matchedCategoryNames()))
                     .suggestCategories(aiReconise.newCategorySuggestions())
+                    .comments(aiReconise.rawNotes())
                 .build()
         );
     }
