@@ -1,6 +1,7 @@
 package com.backend.bilanko.controller.object.product;
 
 import com.backend.bilanko.DTO.object.product.CategoryDTO;
+import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.services.object.product.CategoryServices;
 import com.backend.bilanko.utils.routes.CategoryApiRoutes;
@@ -41,6 +42,13 @@ public class CategoryController {
     @GetMapping(CategoryApiRoutes.find_by_id)
     public ResponseEntity<Category> findById(@PathVariable long id) {
         return ResponseEntity.ok(categoryServices.findById(id));
+    }
+
+    // GET /api/categories/search?name=...  →  public (pas besoin d'être admin)
+    @GetMapping(CategoryApiRoutes.search_by_name)
+    public ResponseEntity<List<CleanCategoryDTO>> searchByName(
+            @RequestParam String name) {
+        return ResponseEntity.ok(categoryServices.searchByName(name));
     }
 
     // ── UPDATE ─────────────────────────────────────────────────────────────

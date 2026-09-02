@@ -31,6 +31,10 @@ public class SecurityConfig {
                         // 2. Laisser passer toutes les requêtes preflight OPTIONS sans authentification
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Catalogue public : lecture des catégories sans authentification
+                        .requestMatchers(HttpMethod.GET, "/api/categories/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/search").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

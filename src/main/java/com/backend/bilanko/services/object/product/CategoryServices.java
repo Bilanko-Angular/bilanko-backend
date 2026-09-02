@@ -10,6 +10,7 @@ public interface CategoryServices {
     Category create(CategoryDTO categoryDTO, String email);
     List<Category> findAll();
     Category findById(long id);
+    List<CleanCategoryDTO> searchByName(String name);
     public List<CleanCategoryDTO> getCategoriesByNames(List<String> names);
     Category update(long id, CategoryDTO categoryDTO, String email);
     void delete(long id, String email);
