@@ -43,6 +43,13 @@ public class CategoryController {
         return ResponseEntity.ok(categoryServices.findById(id));
     }
 
+    // GET /api/categories/search?name=...  →  public (pas besoin d'être admin)
+    @GetMapping(CategoryApiRoutes.search_by_name)
+    public ResponseEntity<List<Category>> searchByName(
+            @RequestParam String name) {
+        return ResponseEntity.ok(categoryServices.searchByName(name));
+    }
+
     // ── UPDATE ─────────────────────────────────────────────────────────────
     // PUT /api/categories/{id}  →  ADMIN uniquement
     @PutMapping(CategoryApiRoutes.update_category)
