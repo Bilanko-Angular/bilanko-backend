@@ -22,9 +22,6 @@ public record ProductRecognitionResponseDTO(
         @JsonPropertyDescription("Quantité mentionnée, ou null")
         Integer suggestedQuantity,
 
-        @JsonPropertyDescription("Référence produit mentionnée, ou null")
-        String suggestedReference,
-
         @JsonPropertyDescription("Commentaire libre optionnel, ou null")
         String rawNotes
 ) {}

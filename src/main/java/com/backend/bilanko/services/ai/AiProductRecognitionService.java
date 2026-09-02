@@ -6,6 +6,7 @@ import com.backend.bilanko.repository.product.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.content.Media;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,11 +17,17 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class AiProductRecognitionService {
 
     private final ChatClient chatClient;
     private final CategoryRepository categoryRepository;
+
+    public AiProductRecognitionService(
+            @Qualifier("openRouterChatClient") ChatClient chatClient,
+            CategoryRepository categoryRepository) {
+        this.chatClient = chatClient;
+        this.categoryRepository = categoryRepository;
+    }
 
     public ProductRecognitionResponseDTO recognize(MultipartFile image) {
         List<String> existingCategories = categoryRepository.findAll()

@@ -2,8 +2,8 @@ package com.backend.bilanko.controller.ai;
 
 import com.backend.bilanko.DTO.ai.ProductDescriptionClean;
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
+import com.backend.bilanko.mapper.AIProductMapper;
 import com.backend.bilanko.services.ai.AiProductRecognitionService;
-import com.backend.bilanko.services.object.product.CategoryServices;
 import com.backend.bilanko.utils.routes.AiApiRoutes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class AiProductController {
 
     private final AiProductRecognitionService aiProductRecognitionService;
-    private final CategoryServices categoryServices;
+    private final AIProductMapper aiProductMapper;
 
     @PostMapping(value = AiApiRoutes.RECOGNIZE_PRODUCT, consumes = "multipart/form-data")
     public ResponseEntity<ProductDescriptionClean> recognizeProduct(
             @RequestParam("image") MultipartFile image) {
         ProductRecognitionResponseDTO aiReconise = aiProductRecognitionService.recognize(image);
-        return ResponseEntity.ok(ProductDescriptionClean.builder()
-                    .name(aiReconise.suggestedName())
-                    .price(aiReconise.suggestedPrice())
-                    .quantity(0)
-                    .categoryDTOS(categoryServices.getCategoriesByNames(aiReconise.matchedCategoryNames()))
-                    .suggestCategories(aiReconise.newCategorySuggestions())
-                    .comments(aiReconise.rawNotes())
-                .build()
-        );
+        return ResponseEntity.ok(aiProductMapper.cleanAiImageJsonReponse(aiReconise));
     }
 }

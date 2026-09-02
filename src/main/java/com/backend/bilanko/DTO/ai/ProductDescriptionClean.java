@@ -13,6 +13,8 @@ public record ProductDescriptionClean(
         int quantity,
         @PositiveOrZero
         double price,
+        @PositiveOrZero
+        double purchasePrice,
         List<CleanCategoryDTO> categoryDTOS,
         List<String> suggestCategories,
         String comments

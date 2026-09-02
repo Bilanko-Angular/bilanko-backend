@@ -3,7 +3,7 @@ package com.backend.bilanko.services.ai;
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.repository.product.CategoryRepository;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +47,7 @@ public class GroqTranscriptionService {
                 .retrieve()
                 .body(JsonNode.class);
 
+        assert response != null;
         return response.path("text").asText();
     }
 

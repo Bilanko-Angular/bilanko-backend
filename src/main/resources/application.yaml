@@ -21,7 +21,15 @@ spring:
           auth: true
           starttls:
             enable: true
-
+  ai:
+    model:
+      chat: none
+      audio:
+        speech: none
+        transcription: none
+      embedding: none
+      image: none
+      moderation: none
 openrouter:
   api-key: ${OPENROUTER_API_KEY}
   base-url: https://openrouter.ai/api/v1
@@ -30,7 +38,7 @@ openrouter:
 groq:
   api-key: ${GROQ_API_KEY}
   base-url: https://api.groq.com/openai/v1
-  model: whisper-large-v3-turbo
+  model: openai/gpt-oss-120b
 
 jwt:
   secret: ${JWT_SECRET}
