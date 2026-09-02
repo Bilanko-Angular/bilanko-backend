@@ -3,7 +3,7 @@ package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.DTO.object.product.CategoryDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.services.object.product.CategoryServices;
-import com.backend.bilanko.utils.constant.CategoryApiRoutes;
+import com.backend.bilanko.utils.routes.CategoryApiRoutes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
