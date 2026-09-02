@@ -3,7 +3,7 @@ package com.backend.bilanko.controller.auth;
 import com.backend.bilanko.DTO.person.UserResponseDTO;
 import com.backend.bilanko.mapper.UserMapper;
 import com.backend.bilanko.services.person.UserServices;
-import com.backend.bilanko.utils.constant.UserApiRoutes;
+import com.backend.bilanko.utils.routes.UserApiRoutes;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

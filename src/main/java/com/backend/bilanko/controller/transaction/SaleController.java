@@ -4,7 +4,7 @@ import com.backend.bilanko.DTO.concept.transaction.SaleRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.SaleResponseDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.transaction.SaleService;
-import com.backend.bilanko.utils.constant.SaleApiRoutes;
+import com.backend.bilanko.utils.routes.SaleApiRoutes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

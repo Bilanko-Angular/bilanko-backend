@@ -1,4 +1,4 @@
-package com.backend.bilanko.utils.constant;
+package com.backend.bilanko.utils.routes;
 
 public final class AiApiRoutes {
     public static final String BASE = "/api/ai";

@@ -4,7 +4,7 @@ import com.backend.bilanko.DTO.concept.transaction.ChargeRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.transaction.ChargeService;
-import com.backend.bilanko.utils.constant.ChargeApiRoutes;
+import com.backend.bilanko.utils.routes.ChargeApiRoutes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

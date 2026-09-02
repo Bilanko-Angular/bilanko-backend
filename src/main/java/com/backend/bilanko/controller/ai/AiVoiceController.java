@@ -3,7 +3,7 @@ package com.backend.bilanko.controller.ai;
 
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
 import com.backend.bilanko.services.ai.GroqTranscriptionService;
-import com.backend.bilanko.utils.constant.AiApiRoutes;
+import com.backend.bilanko.utils.routes.AiApiRoutes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

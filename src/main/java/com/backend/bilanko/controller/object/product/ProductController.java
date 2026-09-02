@@ -3,7 +3,7 @@ package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
-import com.backend.bilanko.utils.constant.ProductApiRoutes;
+import com.backend.bilanko.utils.routes.ProductApiRoutes;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
