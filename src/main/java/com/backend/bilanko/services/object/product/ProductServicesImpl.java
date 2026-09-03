@@ -46,7 +46,7 @@ public class ProductServicesImpl implements ProductServices {
             product.setAlertThreshold(productDTO.alertThreshold());
         }
 
-        // Un seul save suffit maintenant — createdAt géré par @PrePersist
+        // Un seul save suffit maintenant — createdAt géré par BaseEntity (@CreationTimestamp)
         return repo.save(product);
     }
 

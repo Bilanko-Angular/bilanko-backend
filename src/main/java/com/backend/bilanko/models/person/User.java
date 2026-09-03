@@ -9,18 +9,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String name;
     private String subname;

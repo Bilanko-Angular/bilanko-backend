@@ -1,4 +1,4 @@
-package com.backend.bilanko.controller.auth;
+package com.backend.bilanko.controller.person;
 
 import com.backend.bilanko.DTO.person.UserResponseDTO;
 import com.backend.bilanko.mapper.UserMapper;

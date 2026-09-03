@@ -5,17 +5,16 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Entity
 @Table(name = "password_reset_otp")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PasswordResetOtp {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PasswordResetOtp extends BaseEntity {
 
     /** Adresse e-mail de l'utilisateur */
     @Column(nullable = false)
@@ -38,11 +37,6 @@ public class PasswordResetOtp {
     @Column(nullable = false)
     @Builder.Default
     private boolean verified = false;
-
-    /** Date de création */
-    @Column(nullable = false)
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
 
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiresAt);

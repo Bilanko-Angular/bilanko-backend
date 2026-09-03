@@ -6,17 +6,15 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Charge {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Charge extends BaseEntity {
 
     @Column(nullable = false)
     private String label;
