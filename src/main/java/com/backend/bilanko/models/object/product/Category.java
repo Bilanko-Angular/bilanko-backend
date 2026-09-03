@@ -5,16 +5,15 @@ import lombok.*;
 
 import java.util.List;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Category extends BaseEntity {
     @Column(nullable = false)
     private String name;
     @ManyToMany

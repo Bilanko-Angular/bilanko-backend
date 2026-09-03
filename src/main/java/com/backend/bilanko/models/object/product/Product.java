@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Product extends BaseEntity {
+
     @Column(nullable = false)
     private String name;
     @Min(0)
@@ -34,11 +34,5 @@ public class Product {
     @Column(nullable = false, unique = true)
     private String reference;
     private Integer alertThreshold;
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 }

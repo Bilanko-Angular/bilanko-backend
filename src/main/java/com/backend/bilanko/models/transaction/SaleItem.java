@@ -5,17 +5,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import com.backend.bilanko.models.BaseEntity;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class SaleItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+public class SaleItem extends BaseEntity {
     @ManyToOne(optional = false)
     private Sale sale;
 
