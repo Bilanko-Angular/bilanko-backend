@@ -36,6 +36,12 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
     @Column
     private String profilePictureUrl;
+    @Builder.Default
+    @Embedded
+    private AppearancePreferences appearancePreferences = new AppearancePreferences();
+    @Builder.Default
+    @Column(name = "token_version", nullable = false)
+    private int tokenVersion = 0;
 
     // Pas de "nullable = false" : null par défaut tant que l'utilisateur ne l'a pas renseigné
     @Column(name = "phone_number")

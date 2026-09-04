@@ -1,16 +1,20 @@
 package com.backend.bilanko.services.person;
 
+import com.backend.bilanko.DTO.person.AppearancePreferencesDTO;
 import com.backend.bilanko.DTO.person.ChangePasswordRequest;
 import com.backend.bilanko.DTO.person.NotificationPreferencesDTO;
 import com.backend.bilanko.DTO.person.UpdateProfileRequest;
+import com.backend.bilanko.models.person.AppearancePreferences;
 import com.backend.bilanko.models.person.NotificationPreferences;
 import com.backend.bilanko.models.person.Role;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.services.external.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -18,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServicesImpl implements UserServices {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // déjà utilisé au signup, à réinjecter ici
+    private final FileStorageService fileStorageService;
 
     @Override
     public User findUserByEmail(String email) {
@@ -43,17 +48,6 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public void changePassword(String email, ChangePasswordRequest request) {
-        User user = findUserByEmail(email);
-        // On vérifie l'ancien mot de passe avant d'autoriser le changement
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mot de passe actuel incorrect");
-        }
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        userRepository.save(user);
-    }
-
-    @Override
     public NotificationPreferences getNotificationPreferences(String email) {
         return findUserByEmail(email).getNotificationPreferences();
     }
@@ -68,5 +62,48 @@ public class UserServicesImpl implements UserServices {
         prefs.setUpdates(dto.updates());
         userRepository.save(user);
         return prefs;
+    }
+    @Override
+    public void changePassword(String email, ChangePasswordRequest request) {
+        User user = findUserByEmail(email);
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mot de passe actuel incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        user.setTokenVersion(user.getTokenVersion() + 1); // invalide les autres sessions par sécurité
+        userRepository.save(user);
+    }
+
+    @Override
+    public AppearancePreferences getAppearancePreferences(String email) {
+        return findUserByEmail(email).getAppearancePreferences();
+    }
+
+    @Override
+    public AppearancePreferences updateAppearancePreferences(String email, AppearancePreferencesDTO dto) {
+        User user = findUserByEmail(email);
+        AppearancePreferences prefs = user.getAppearancePreferences();
+        prefs.setTheme(dto.theme());
+        prefs.setLanguage(dto.language());
+        prefs.setDateFormat(dto.dateFormat());
+        prefs.setCurrency(dto.currency());
+        prefs.setCompactMode(dto.compactMode());
+        userRepository.save(user);
+        return prefs;
+    }
+
+    @Override
+    public User updateProfilePicture(String email, MultipartFile file) {
+        User user = findUserByEmail(email);
+        String url = fileStorageService.uploadProfilePicture(file, user.getId());
+        user.setProfilePictureUrl(url);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void logoutAllDevices(String email) {
+        User user = findUserByEmail(email);
+        user.setTokenVersion(user.getTokenVersion() + 1);
+        userRepository.save(user);
     }
 }

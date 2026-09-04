@@ -1,4 +1,6 @@
 package com.backend.bilanko.services.auth;
+
+import com.backend.bilanko.models.person.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -6,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,21 +19,24 @@ import java.util.function.Function;
 public class JWTServices {
     @Value("${jwt.secret}")
     private String secretKey;
-
-    @Value("${jwt.expiration}") // ex: 86400000 (24h)
+    @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(UserDetails userDetails){
-        return  buildToken(new HashMap<>(),userDetails,jwtExpiration);
+    // Génère un token en embarquant la version du token de l'utilisateur (claim "tv")
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("tv", user.getTokenVersion());
+        return buildToken(claims, user, jwtExpiration);
     }
 
-    /** Génère un token avec des claims personnalisés et une durée de vie spécifique (en ms) */
     public String generateTokenWithExpiration(Map<String, Object> extraClaims, UserDetails userDetails, long expirationMs) {
+        if (userDetails instanceof User user) {
+            extraClaims.put("tv", user.getTokenVersion());
+        }
         return buildToken(extraClaims, userDetails, expirationMs);
     }
 
-
-    private String buildToken(Map<String,Object> extraClaims, UserDetails userDetails,long expiration){
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
@@ -39,9 +45,11 @@ public class JWTServices {
                 .signWith(getSignInKey())
                 .compact();
     }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
         Claims claims = extractAllClaims(token);
         return resolver.apply(claims);
@@ -55,9 +63,18 @@ public class JWTServices {
                 .getPayload();
     }
 
+    // Vérifie username + expiration + version du token (invalidée par changement de mdp ou logout-all)
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        boolean usernameMatches = username.equals(userDetails.getUsername());
+
+        boolean tokenVersionMatches = true;
+        if (userDetails instanceof User user) {
+            Integer tokenVersion = extractClaim(token, claims -> claims.get("tv", Integer.class));
+            tokenVersionMatches = tokenVersion != null && tokenVersion == user.getTokenVersion();
+        }
+
+        return usernameMatches && tokenVersionMatches && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

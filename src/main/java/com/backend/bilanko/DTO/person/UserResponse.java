@@ -11,5 +11,6 @@ public record UserResponse(
         String profilePictureUrl,
         String phoneNumber,
         String companyName,
-        NotificationPreferencesDTO notificationPreferences
+        NotificationPreferencesDTO notificationPreferences,
+        AppearancePreferencesDTO appearancePreferences
 ) {}
