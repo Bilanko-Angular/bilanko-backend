@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,11 +71,18 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toAppearancePreferenceDTO(userServices.updateAppearancePreferences(currentUserEmail(), request)));
     }
 
+    @DeleteMapping(UserApiRoutes.DELETE_PICTURE_PROFILE)
+    public ResponseEntity<Void> deletePictureProfile(Authentication authentication){
+        String email=authentication.getName();
+        userServices.deleteProfilePicture(email);
+        return  ResponseEntity.noContent().build();
+    }
     @PostMapping(UserApiRoutes.LOGOUT_ALL)
     public ResponseEntity<Void> logoutAllDevices() {
         userServices.logoutAllDevices(currentUserEmail());
         return ResponseEntity.noContent().build();
     }
+
 
     // --- Utilitaires privés ---
 
