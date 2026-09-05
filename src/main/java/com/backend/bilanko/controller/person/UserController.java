@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toAppearancePreferenceDTO(userServices.updateAppearancePreferences(currentUserEmail(), request)));
     }
 
-    @PatchMapping(UserApiRoutes.DELETE_PICTURE_PROFILE)
+    @DeleteMapping(UserApiRoutes.DELETE_PICTURE_PROFILE)
     public ResponseEntity<Void> deletePictureProfile(Authentication authentication){
         String email=authentication.getName();
         userServices.deleteProfilePicture(email);
