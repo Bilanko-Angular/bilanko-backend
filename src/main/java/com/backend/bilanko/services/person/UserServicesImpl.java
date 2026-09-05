@@ -48,6 +48,13 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
+    public void deleteProfilePicture(String email) {
+        User user= findUserByEmail(email);
+        user.setProfilePictureUrl(null);
+        userRepository.save(user);
+    }
+
+    @Override
     public NotificationPreferences getNotificationPreferences(String email) {
         return findUserByEmail(email).getNotificationPreferences();
     }
@@ -106,4 +113,5 @@ public class UserServicesImpl implements UserServices {
         user.setTokenVersion(user.getTokenVersion() + 1);
         userRepository.save(user);
     }
+
 }

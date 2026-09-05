@@ -8,4 +8,5 @@ public final class UserApiRoutes {
     public static final String PHOTO = "/me/photo";
     public static final String APPEARANCE = "/me/appearance";
     public static final String LOGOUT_ALL = "/me/logout-all";
+    public static final String DELETE_PICTURE_PROFILE = "/me/delete-picture-profile";
 }

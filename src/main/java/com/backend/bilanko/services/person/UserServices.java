@@ -15,6 +15,7 @@ public interface UserServices {
     boolean confirmRoleByEmail(Role role, String email);
 
     User updateProfile(String email, UpdateProfileRequest request);
+    void deleteProfilePicture(String email);
     void changePassword(String email, ChangePasswordRequest request);
 
     NotificationPreferences getNotificationPreferences(String email);
@@ -25,4 +26,5 @@ public interface UserServices {
 
     User updateProfilePicture(String email, MultipartFile file);
     void logoutAllDevices(String email);
+
 }
