@@ -54,13 +54,6 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toDtoNotificationPreferenceDTO(prefs));
     }
 
-    // --- Utilitaires privés ---
-
-    private String currentUserEmail() {
-        return Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-    }
-
-
     @PostMapping(value = UserApiRoutes.PHOTO, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponse> uploadPhoto(@RequestParam("file") MultipartFile file) {
         User user = userServices.updateProfilePicture(currentUserEmail(), file);
@@ -81,5 +74,11 @@ public class UserController {
     public ResponseEntity<Void> logoutAllDevices() {
         userServices.logoutAllDevices(currentUserEmail());
         return ResponseEntity.noContent().build();
+    }
+
+    // --- Utilitaires privés ---
+
+    private String currentUserEmail() {
+        return Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
     }
 }
