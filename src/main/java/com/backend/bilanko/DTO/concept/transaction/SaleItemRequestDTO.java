@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public record SaleItemRequestDTO(
         @NotNull
         Long productId,
-        @Min(0)
+        @Min(1)
         int quantity,
         Double unitSellingPrice
 ) {
