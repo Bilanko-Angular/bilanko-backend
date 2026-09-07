@@ -56,6 +56,15 @@ public class SaleService {
         return SaleMapper.toDto(findOwnedSale(id, currentUser));
     }
 
+    public List<SaleResponseDTO> searchSales(String keyword, User currentUser) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+        return saleRepository.searchByKeyword(currentUser, keyword.trim()).stream()
+                .map(SaleMapper::toDto)
+                .toList();
+    }
+
     public SaleSummaryDTO getSummary(User currentUser, LocalDateTime from, LocalDateTime to) {
         List<Sale> sales = findSales(currentUser, from, to);
 

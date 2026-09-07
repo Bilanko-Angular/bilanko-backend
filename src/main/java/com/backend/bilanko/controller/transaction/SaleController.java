@@ -50,6 +50,14 @@ public class SaleController {
         return ResponseEntity.ok(saleService.getSummary(currentUser, from, to));
     }
 
+    @GetMapping(SaleApiRoutes.SEARCH)
+    public ResponseEntity<List<SaleResponseDTO>> searchSales(
+            @RequestParam String keyword,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        return ResponseEntity.ok(saleService.searchSales(keyword, currentUser));
+    }
+
     @GetMapping(SaleApiRoutes.BY_ID)
     public ResponseEntity<SaleResponseDTO> getSaleById(
             @PathVariable long id,
