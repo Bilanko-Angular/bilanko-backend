@@ -1,6 +1,7 @@
 package com.backend.bilanko.services.object.product;
 
 import com.backend.bilanko.DTO.object.product.ProductDTO;
+import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Product;
 import org.springframework.data.domain.Page;
 
@@ -27,5 +28,7 @@ public interface ProductServices {
     void delete(long id, String email);
 
     Page<Product> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size);
+
+    StockOverviewDTO getStockOverview(String email);
 }
 

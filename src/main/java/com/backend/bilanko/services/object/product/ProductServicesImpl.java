@@ -1,6 +1,7 @@
 package com.backend.bilanko.services.object.product;
 
 import com.backend.bilanko.DTO.object.product.ProductDTO;
+import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.User;
@@ -121,6 +122,37 @@ public class ProductServicesImpl implements ProductServices {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         return repo.findAll(spec, pageable);
     }
+
+    @Override
+    public StockOverviewDTO getStockOverview(String email) {
+        List<Product> products = findMyProducts(email);
+
+        long outOfStock = 0;
+        long lowStock = 0;
+        double stockValueAtPurchase = 0;
+        double stockValueAtSale = 0;
+
+        for (Product product : products) {
+            int quantity = product.getQuantity();
+            stockValueAtPurchase += quantity * product.getPurchasePrice();
+            stockValueAtSale += quantity * product.getPrice();
+
+            if (quantity == 0) {
+                outOfStock++;
+            } else if (product.getAlertThreshold() != null && quantity <= product.getAlertThreshold()) {
+                lowStock++;
+            }
+        }
+
+        return new StockOverviewDTO(
+                products.size(),
+                outOfStock,
+                lowStock,
+                stockValueAtPurchase,
+                stockValueAtSale
+        );
+    }
+
     // ── HELPERS ──────────────────────────────────────────────────
 
     /** Lève 403 si le user connecté n'est pas le propriétaire du produit. */

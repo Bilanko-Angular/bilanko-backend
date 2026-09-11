@@ -2,16 +2,19 @@ package com.backend.bilanko.controller.transaction;
 
 import com.backend.bilanko.DTO.concept.transaction.ChargeRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
+import com.backend.bilanko.DTO.concept.transaction.ChargeSummaryDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.transaction.ChargeService;
 import com.backend.bilanko.utils.routes.ChargeApiRoutes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -31,9 +34,20 @@ public class ChargeController {
 
     @GetMapping(ChargeApiRoutes.BASE)
     public ResponseEntity<List<ChargeResponseDTO>> getAllCharges(
-            @AuthenticationPrincipal User currentUser
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        return ResponseEntity.ok(chargeService.getAllCharges(currentUser));
+        return ResponseEntity.ok(chargeService.getAllCharges(currentUser, from, to));
+    }
+
+    @GetMapping(ChargeApiRoutes.SUMMARY)
+    public ResponseEntity<ChargeSummaryDTO> getSummary(
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+        return ResponseEntity.ok(chargeService.getSummary(currentUser, from, to));
     }
 
     @GetMapping(ChargeApiRoutes.BY_ID)
