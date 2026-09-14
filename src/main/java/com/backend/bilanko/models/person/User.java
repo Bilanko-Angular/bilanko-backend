@@ -47,10 +47,26 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    // Vide par défaut
+    // Vide par défaut — correspond à la raison sociale côté documents
     @Builder.Default
     @Column(name = "company_name")
     private String companyName = "";
+
+    /** Activité commerciale du commerçant (nullable jusqu'à renseignement). */
+    @Column(name = "activite")
+    private String activite;
+
+    /** Numéro d'identification unique (NIU / NUI). */
+    @Column(name = "niu")
+    private String niu;
+
+    /** Adresse du commerce. */
+    @Column(name = "adresse")
+    private String adresse;
+
+    /** Date de création de l'activité (ISO yyyy-MM-dd ou libellé saisi). */
+    @Column(name = "date_de_creation_activite")
+    private String dateDeCreationActivite;
 
     // Préférences de notifications, embarquées dans la table users
     @Builder.Default
