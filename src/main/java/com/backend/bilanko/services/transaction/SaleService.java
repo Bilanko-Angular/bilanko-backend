@@ -4,6 +4,8 @@ import com.backend.bilanko.DTO.concept.transaction.SaleItemRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.SaleRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.SaleResponseDTO;
 import com.backend.bilanko.DTO.concept.transaction.SaleSummaryDTO;
+import com.backend.bilanko.DTO.concept.transaction.SaleTimeSeriesPointDTO;
+import com.backend.bilanko.DTO.concept.transaction.TopSoldProductDTO;
 import com.backend.bilanko.mapper.SaleMapper;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.User;
@@ -18,8 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +81,104 @@ public class SaleService {
         return new SaleSummaryDTO(sales.size(), totalAmount, totalMargin, from, to);
     }
 
+    public List<SaleTimeSeriesPointDTO> getTimeSeries(
+            User currentUser,
+            LocalDateTime from,
+            LocalDateTime to,
+            String granularity
+    ) {
+        String resolved = resolveGranularity(granularity);
+        DateTimeFormatter formatter = "month".equals(resolved)
+                ? DateTimeFormatter.ofPattern("yyyy-MM")
+                : DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        List<Sale> sales = findSales(currentUser, from, to);
+        Map<String, List<Sale>> grouped = sales.stream()
+                .sorted(Comparator.comparing(Sale::getSaleDate))
+                .collect(Collectors.groupingBy(
+                        sale -> sale.getSaleDate().format(formatter),
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+
+        return grouped.entrySet().stream()
+                .map(entry -> {
+                    List<Sale> periodSales = entry.getValue();
+                    double totalAmount = periodSales.stream().mapToDouble(Sale::getTotalAmount).sum();
+                    double totalMargin = periodSales.stream().mapToDouble(Sale::getTotalMargin).sum();
+                    return new SaleTimeSeriesPointDTO(
+                            entry.getKey(),
+                            periodSales.size(),
+                            totalAmount,
+                            totalMargin
+                    );
+                })
+                .toList();
+    }
+
+    public List<TopSoldProductDTO> getTopProducts(
+            User currentUser,
+            LocalDateTime from,
+            LocalDateTime to,
+            int limit,
+            String sortBy
+    ) {
+        if (limit < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le paramètre 'limit' doit être au moins 1");
+        }
+
+        String resolvedSort = resolveTopSort(sortBy);
+        List<Sale> sales = findSales(currentUser, from, to);
+
+        Map<Long, Acc> byProduct = new LinkedHashMap<>();
+        for (Sale sale : sales) {
+            for (SaleItem item : sale.getItems()) {
+                Product product = item.getProduct();
+                Acc incoming = new Acc(
+                        product.getId(),
+                        product.getName(),
+                        product.getReference(),
+                        item.getQuantity(),
+                        item.getUnitSellingPrice() * item.getQuantity(),
+                        item.getMargin()
+                );
+                byProduct.merge(product.getId(), incoming, Acc::combine);
+            }
+        }
+
+        Comparator<Acc> comparator = switch (resolvedSort) {
+            case "revenue" -> Comparator.comparingDouble(Acc::revenue).reversed();
+            case "margin" -> Comparator.comparingDouble(Acc::margin).reversed();
+            default -> Comparator.comparingLong(Acc::quantity).reversed();
+        };
+
+        return byProduct.values().stream()
+                .sorted(comparator)
+                .limit(limit)
+                .map(acc -> new TopSoldProductDTO(
+                        acc.productId(),
+                        acc.name(),
+                        acc.reference(),
+                        acc.quantity(),
+                        acc.revenue(),
+                        acc.margin()
+                ))
+                .toList();
+    }
+
+    private record Acc(long productId, String name, String reference, long quantity, double revenue, double margin) {
+        Acc combine(Acc other) {
+            return new Acc(
+                    productId,
+                    name,
+                    reference,
+                    quantity + other.quantity,
+                    revenue + other.revenue,
+                    margin + other.margin
+            );
+        }
+    }
+
     @Transactional
     public SaleResponseDTO updateSale(long id, SaleRequestDTO dto, User currentUser) {
         Sale sale = findOwnedSale(id, currentUser);
@@ -97,7 +202,7 @@ public class SaleService {
         saleRepository.delete(sale);
     }
 
-    private List<Sale> findSales(User currentUser, LocalDateTime from, LocalDateTime to) {
+    List<Sale> findSales(User currentUser, LocalDateTime from, LocalDateTime to) {
         if (from == null && to == null) {
             return saleRepository.findByUserOrderBySaleDateDesc(currentUser);
         }
@@ -114,6 +219,32 @@ public class SaleService {
             );
         }
         return saleRepository.findByUserAndSaleDateBetweenOrderBySaleDateDesc(currentUser, from, to);
+    }
+
+    private String resolveGranularity(String granularity) {
+        if (granularity == null || granularity.isBlank() || "day".equalsIgnoreCase(granularity)) {
+            return "day";
+        }
+        if ("month".equalsIgnoreCase(granularity)) {
+            return "month";
+        }
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Le paramètre 'granularity' doit être 'day' ou 'month'"
+        );
+    }
+
+    private String resolveTopSort(String sortBy) {
+        if (sortBy == null || sortBy.isBlank() || "quantity".equalsIgnoreCase(sortBy)) {
+            return "quantity";
+        }
+        if ("revenue".equalsIgnoreCase(sortBy) || "margin".equalsIgnoreCase(sortBy)) {
+            return sortBy.toLowerCase();
+        }
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Le paramètre 'sortBy' doit être 'quantity', 'revenue' ou 'margin'"
+        );
     }
 
     private Sale findOwnedSale(long id, User currentUser) {

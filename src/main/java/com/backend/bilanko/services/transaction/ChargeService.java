@@ -2,6 +2,7 @@ package com.backend.bilanko.services.transaction;
 
 import com.backend.bilanko.DTO.concept.transaction.ChargeRequestDTO;
 import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
+import com.backend.bilanko.DTO.concept.transaction.ChargeSummaryDTO;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.User;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,11 +36,16 @@ public class ChargeService {
         return ChargeMapper.toDto(saved);
     }
 
-    public List<ChargeResponseDTO> getAllCharges(User currentUser) {
-        return chargeRepository.findByUserOrderByDateDesc(currentUser)
-                .stream()
+    public List<ChargeResponseDTO> getAllCharges(User currentUser, LocalDate from, LocalDate to) {
+        return findCharges(currentUser, from, to).stream()
                 .map(ChargeMapper::toDto)
                 .toList();
+    }
+
+    public ChargeSummaryDTO getSummary(User currentUser, LocalDate from, LocalDate to) {
+        List<Charge> charges = findCharges(currentUser, from, to);
+        double totalAmount = charges.stream().mapToDouble(Charge::getAmount).sum();
+        return new ChargeSummaryDTO(charges.size(), totalAmount, from, to);
     }
 
     public ChargeResponseDTO getChargeById(long id, User currentUser) {
@@ -63,6 +70,25 @@ public class ChargeService {
     public void deleteCharge(long id, User currentUser) {
         Charge charge = findOwnedCharge(id, currentUser);
         chargeRepository.delete(charge);
+    }
+
+    List<Charge> findCharges(User currentUser, LocalDate from, LocalDate to) {
+        if (from == null && to == null) {
+            return chargeRepository.findByUserOrderByDateDesc(currentUser);
+        }
+        if (from == null || to == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Les paramètres 'from' et 'to' doivent être fournis ensemble"
+            );
+        }
+        if (from.isAfter(to)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "La date 'from' ne peut pas être postérieure à 'to'"
+            );
+        }
+        return chargeRepository.findByUserAndDateBetweenOrderByDateDesc(currentUser, from, to);
     }
 
     private Charge findOwnedCharge(long id, User currentUser) {

@@ -1,6 +1,7 @@
 package com.backend.bilanko.controller.object.product;
 
 import com.backend.bilanko.DTO.object.product.ProductDTO;
+import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
 import com.backend.bilanko.utils.routes.ProductApiRoutes;
@@ -46,6 +47,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> findMyProducts(Authentication authentication) {
         String email = authentication.getName();
         return ResponseEntity.ok(productServices.findMyProducts(email));
+    }
+
+    // GET /api/products/stock-overview  →  indicateurs stock pour le dashboard
+    @GetMapping(ProductApiRoutes.PRODUCTS_STOCK)
+    public ResponseEntity<StockOverviewDTO> getStockOverview(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(productServices.getStockOverview(email));
     }
 
     // GET /api/products/{id}  →  un produit précis par ID

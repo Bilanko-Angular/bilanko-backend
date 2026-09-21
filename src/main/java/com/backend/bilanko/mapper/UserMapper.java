@@ -29,8 +29,13 @@ public final class UserMapper {
         return new UserResponse(
                 user.getId(), user.getName(), user.getSubname(), user.getEmail(),
                 user.getRole(), user.getProfilePictureUrl(), user.getPhoneNumber(),
-                user.getCompanyName(), toDtoNotificationPreferenceDTO(user.getNotificationPreferences()),
-                toAppearancePreferenceDTO(user.getAppearancePreferences()) // <-- à ajouter
+                user.getCompanyName(),
+                user.getActivite(),
+                user.getNiu(),
+                user.getAdresse(),
+                user.getDateDeCreationActivite(),
+                toDtoNotificationPreferenceDTO(user.getNotificationPreferences()),
+                toAppearancePreferenceDTO(user.getAppearancePreferences())
         );
     }
 

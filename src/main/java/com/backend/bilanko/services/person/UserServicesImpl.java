@@ -44,6 +44,18 @@ public class UserServicesImpl implements UserServices {
         user.setSubname(request.subname());
         user.setPhoneNumber(request.phoneNumber());
         user.setCompanyName(request.companyName());
+        if (request.activite() != null) {
+            user.setActivite(request.activite());
+        }
+        if (request.niu() != null) {
+            user.setNiu(request.niu());
+        }
+        if (request.adresse() != null) {
+            user.setAdresse(request.adresse());
+        }
+        if (request.dateDeCreationActivite() != null) {
+            user.setDateDeCreationActivite(request.dateDeCreationActivite());
+        }
         return userRepository.save(user);
     }
 
