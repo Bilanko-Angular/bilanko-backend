@@ -1,7 +1,7 @@
 package com.backend.bilanko.services.person;
 
-import com.backend.bilanko.DTO.person.NotificationPageDTO;
-import com.backend.bilanko.DTO.person.NotificationResponseDTO;
+import com.backend.bilanko.DTO.person.notification.NotificationPageDTO;
+import com.backend.bilanko.DTO.person.notification.NotificationResponseDTO;
 import com.backend.bilanko.mapper.NotificationMapper;
 import com.backend.bilanko.models.person.Notification;
 import com.backend.bilanko.models.person.NotificationPreferences;

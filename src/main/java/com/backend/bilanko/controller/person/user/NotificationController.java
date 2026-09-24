@@ -1,7 +1,7 @@
 package com.backend.bilanko.controller.person.user;
 
-import com.backend.bilanko.DTO.person.AppUpdateBroadcastRequest;
-import com.backend.bilanko.DTO.person.NotificationPageDTO;
+import com.backend.bilanko.DTO.person.notification.AppUpdateBroadcastRequest;
+import com.backend.bilanko.DTO.person.notification.NotificationPageDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.person.NotificationService;
 import com.backend.bilanko.services.person.NotificationSseService;

@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.auth;
+package com.backend.bilanko.DTO.person.passwordReset;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

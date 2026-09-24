@@ -1,9 +1,9 @@
 package com.backend.bilanko.services.person;
 
-import com.backend.bilanko.DTO.person.AppearancePreferencesDTO;
-import com.backend.bilanko.DTO.person.ChangePasswordRequest;
-import com.backend.bilanko.DTO.person.NotificationPreferencesDTO;
-import com.backend.bilanko.DTO.person.UpdateProfileRequest;
+import com.backend.bilanko.DTO.person.preference.AppearancePreferencesDTO;
+import com.backend.bilanko.DTO.person.passwordReset.ChangePasswordRequest;
+import com.backend.bilanko.DTO.person.notification.NotificationPreferencesDTO;
+import com.backend.bilanko.DTO.person.user.UpdateProfileRequest;
 import com.backend.bilanko.models.person.AppearancePreferences;
 import com.backend.bilanko.models.person.NotificationPreferences;
 import com.backend.bilanko.models.person.Role;

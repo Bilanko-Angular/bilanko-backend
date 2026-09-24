@@ -1,6 +1,6 @@
 package com.backend.bilanko.services.person;
 
-import com.backend.bilanko.DTO.person.NotificationResponseDTO;
+import com.backend.bilanko.DTO.person.notification.NotificationResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

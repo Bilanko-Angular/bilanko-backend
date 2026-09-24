@@ -1,9 +1,9 @@
 package com.backend.bilanko.controller.person.user;
 
-import com.backend.bilanko.DTO.auth.ForgotPasswordRequest;
-import com.backend.bilanko.DTO.auth.ForgotPasswordResponse;
-import com.backend.bilanko.DTO.auth.ResetPasswordRequest;
-import com.backend.bilanko.DTO.auth.VerifyOtpRequest;
+import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordRequest;
+import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordResponse;
+import com.backend.bilanko.DTO.person.passwordReset.ResetPasswordRequest;
+import com.backend.bilanko.DTO.person.passwordReset.VerifyOtpRequest;
 import com.backend.bilanko.services.auth.PasswordResetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.person;
+package com.backend.bilanko.DTO.person.user;
 
 import jakarta.validation.constraints.NotBlank;
 

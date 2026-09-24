@@ -1,6 +1,10 @@
 package com.backend.bilanko.controller.person.user;
 
-import com.backend.bilanko.DTO.person.*;
+import com.backend.bilanko.DTO.person.notification.NotificationPreferencesDTO;
+import com.backend.bilanko.DTO.person.passwordReset.ChangePasswordRequest;
+import com.backend.bilanko.DTO.person.preference.AppearancePreferencesDTO;
+import com.backend.bilanko.DTO.person.user.UpdateProfileRequest;
+import com.backend.bilanko.DTO.person.user.UserResponse;
 import com.backend.bilanko.mapper.UserMapper;
 import com.backend.bilanko.models.person.NotificationPreferences;
 import com.backend.bilanko.models.person.User;

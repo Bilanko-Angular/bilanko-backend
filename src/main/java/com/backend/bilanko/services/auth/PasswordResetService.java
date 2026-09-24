@@ -1,6 +1,6 @@
 package com.backend.bilanko.services.auth;
 
-import com.backend.bilanko.DTO.auth.ForgotPasswordResponse;
+import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordResponse;
 import com.backend.bilanko.models.person.PasswordResetOtp;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.repository.PasswordResetOtpRepository;

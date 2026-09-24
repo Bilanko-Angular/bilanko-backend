@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.auth;
+package com.backend.bilanko.DTO.person.passwordReset;
 
 public record ForgotPasswordResponse(
         String message,
