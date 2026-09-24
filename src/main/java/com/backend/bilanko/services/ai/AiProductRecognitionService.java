@@ -2,8 +2,7 @@ package com.backend.bilanko.services.ai;
 
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
 import com.backend.bilanko.models.object.product.Category;
-import com.backend.bilanko.repository.product.CategoryRepository;
-import lombok.RequiredArgsConstructor;
+import com.backend.bilanko.repository.object.product.CategoryRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.content.Media;
 import org.springframework.beans.factory.annotation.Qualifier;

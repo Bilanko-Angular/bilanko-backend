@@ -6,7 +6,7 @@ import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.repository.concept.transaction.ChargeRepository;
+import com.backend.bilanko.repository.transaction.ChargeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

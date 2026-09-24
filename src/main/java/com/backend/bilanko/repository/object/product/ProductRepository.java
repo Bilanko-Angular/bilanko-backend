@@ -1,4 +1,4 @@
-package com.backend.bilanko.repository.product;
+package com.backend.bilanko.repository.object.product;
 
 import com.backend.bilanko.models.object.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

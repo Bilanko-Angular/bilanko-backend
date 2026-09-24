@@ -4,7 +4,7 @@ import com.backend.bilanko.DTO.auth.AuthResponse;
 import com.backend.bilanko.DTO.auth.RegisterRequest;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.repository.person.UserRepository;
 import com.backend.bilanko.services.auth.JWTServices;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.backend.bilanko.repository;
+package com.backend.bilanko.repository.person;
 
 import com.backend.bilanko.models.person.setting.PasswordResetOtp;
 import org.springframework.data.jpa.repository.JpaRepository;

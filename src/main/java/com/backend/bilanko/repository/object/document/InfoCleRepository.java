@@ -1,4 +1,4 @@
-package com.backend.bilanko.repository.document;
+package com.backend.bilanko.repository.object.document;
 
 import com.backend.bilanko.models.object.document.InfoCle;
 import com.backend.bilanko.models.object.document.TypeInfoCle;

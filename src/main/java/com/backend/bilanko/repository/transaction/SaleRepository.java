@@ -1,4 +1,4 @@
-package com.backend.bilanko.repository.concept.transaction;
+package com.backend.bilanko.repository.transaction;
 
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Sale;

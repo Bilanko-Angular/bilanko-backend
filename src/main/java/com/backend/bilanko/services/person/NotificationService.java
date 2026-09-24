@@ -9,7 +9,7 @@ import com.backend.bilanko.models.person.notification.NotificationType;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.person.NotificationRepository;
-import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.repository.person.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

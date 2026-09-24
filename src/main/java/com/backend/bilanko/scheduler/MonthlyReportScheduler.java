@@ -3,7 +3,7 @@ package com.backend.bilanko.scheduler;
 import com.backend.bilanko.models.person.notification.NotificationType;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.repository.person.UserRepository;
 import com.backend.bilanko.services.person.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

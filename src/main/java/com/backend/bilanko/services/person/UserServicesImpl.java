@@ -8,7 +8,7 @@ import com.backend.bilanko.models.person.setting.AppearancePreferences;
 import com.backend.bilanko.models.person.notification.NotificationPreferences;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.repository.person.UserRepository;
 import com.backend.bilanko.services.external.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
