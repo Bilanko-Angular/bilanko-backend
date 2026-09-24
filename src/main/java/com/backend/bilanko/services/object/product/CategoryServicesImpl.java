@@ -4,7 +4,7 @@ import com.backend.bilanko.DTO.object.product.CategoryDTO;
 import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.models.object.product.Product;
-import com.backend.bilanko.models.person.Role;
+import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.repository.product.CategoryRepository;
 import com.backend.bilanko.repository.product.ProductRepository;
 import com.backend.bilanko.services.person.UserServices;

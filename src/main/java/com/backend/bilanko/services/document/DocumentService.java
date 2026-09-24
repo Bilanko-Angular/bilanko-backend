@@ -1,7 +1,7 @@
 package com.backend.bilanko.services.document;
 
 import com.backend.bilanko.DTO.object.document.*;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.document;
+package com.backend.bilanko.models.object.document;
 
 import com.backend.bilanko.models.BaseEntity;
 import jakarta.persistence.*;

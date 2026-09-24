@@ -1,6 +1,9 @@
 package com.backend.bilanko.config.document;
 
-import com.backend.bilanko.models.document.*;
+import com.backend.bilanko.models.object.document.ConstanceMetier;
+import com.backend.bilanko.models.object.document.InfoCle;
+import com.backend.bilanko.models.object.document.TypeConstanceMetier;
+import com.backend.bilanko.models.object.document.TypeInfoCle;
 import com.backend.bilanko.repository.document.ConstanceMetierRepository;
 import com.backend.bilanko.repository.document.InfoCleRepository;
 import lombok.RequiredArgsConstructor;

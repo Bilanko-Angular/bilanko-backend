@@ -1,10 +1,10 @@
 package com.backend.bilanko.models.object.product;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 import com.backend.bilanko.models.BaseEntity;

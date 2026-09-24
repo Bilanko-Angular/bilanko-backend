@@ -1,8 +1,8 @@
 package com.backend.bilanko.services.auth;
 
 import com.backend.bilanko.DTO.auth.AuthResponse;
-import com.backend.bilanko.models.person.Role;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.Role;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;

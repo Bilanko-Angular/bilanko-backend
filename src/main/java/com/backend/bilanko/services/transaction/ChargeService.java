@@ -5,7 +5,7 @@ import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.concept.transaction.ChargeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.backend.bilanko.services.person.NotificationService;
-import com.backend.bilanko.models.person.NotificationType;
+import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.time.LocalDate;
 import java.util.List;

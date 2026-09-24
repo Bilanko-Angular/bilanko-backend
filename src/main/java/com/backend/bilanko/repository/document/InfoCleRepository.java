@@ -1,7 +1,7 @@
 package com.backend.bilanko.repository.document;
 
-import com.backend.bilanko.models.document.InfoCle;
-import com.backend.bilanko.models.document.TypeInfoCle;
+import com.backend.bilanko.models.object.document.InfoCle;
+import com.backend.bilanko.models.object.document.TypeInfoCle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

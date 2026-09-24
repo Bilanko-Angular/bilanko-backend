@@ -1,8 +1,8 @@
 package com.backend.bilanko.scheduler;
 
-import com.backend.bilanko.models.person.NotificationType;
-import com.backend.bilanko.models.person.Role;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.notification.NotificationType;
+import com.backend.bilanko.models.person.user.Role;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.UserRepository;
 import com.backend.bilanko.services.person.NotificationService;
 import lombok.RequiredArgsConstructor;

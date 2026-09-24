@@ -5,7 +5,7 @@ import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
 import com.backend.bilanko.DTO.summary.sale.SaleSummaryDTO;
 import com.backend.bilanko.DTO.summary.overview.SaleTimeSeriesPointDTO;
 import com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.services.transaction.SaleService;
 import com.backend.bilanko.utils.routes.SaleApiRoutes;
 import jakarta.validation.Valid;

@@ -1,6 +1,7 @@
-package com.backend.bilanko.models.person;
+package com.backend.bilanko.models.person.notification;
 
 import com.backend.bilanko.models.BaseEntity;
+import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

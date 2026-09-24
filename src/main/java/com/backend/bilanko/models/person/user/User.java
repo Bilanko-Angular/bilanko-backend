@@ -1,5 +1,7 @@
-package com.backend.bilanko.models.person;
+package com.backend.bilanko.models.person.user;
 
+import com.backend.bilanko.models.person.notification.NotificationPreferences;
+import com.backend.bilanko.models.person.setting.AppearancePreferences;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

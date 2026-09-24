@@ -1,8 +1,8 @@
 package com.backend.bilanko.repository.document;
 
-import com.backend.bilanko.models.document.Document;
-import com.backend.bilanko.models.document.TypeDocument;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.object.document.Document;
+import com.backend.bilanko.models.object.document.TypeDocument;
+import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

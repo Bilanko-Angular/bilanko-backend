@@ -1,7 +1,7 @@
 package com.backend.bilanko.DTO.object.document;
 
-import com.backend.bilanko.models.document.RegimeFiscal;
-import com.backend.bilanko.models.document.TypeDocument;
+import com.backend.bilanko.models.object.document.RegimeFiscal;
+import com.backend.bilanko.models.object.document.TypeDocument;
 
 import java.time.Instant;
 import java.util.List;

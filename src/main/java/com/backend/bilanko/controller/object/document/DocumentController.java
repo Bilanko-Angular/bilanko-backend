@@ -1,7 +1,7 @@
 package com.backend.bilanko.controller.object.document;
 
 import com.backend.bilanko.DTO.object.document.*;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.services.document.DocumentService;
 import com.backend.bilanko.utils.routes.DocumentApiRoutes;
 import jakarta.validation.Valid;

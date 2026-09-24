@@ -1,6 +1,6 @@
 package com.backend.bilanko.repository;
 
-import com.backend.bilanko.models.person.PasswordResetOtp;
+import com.backend.bilanko.models.person.setting.PasswordResetOtp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

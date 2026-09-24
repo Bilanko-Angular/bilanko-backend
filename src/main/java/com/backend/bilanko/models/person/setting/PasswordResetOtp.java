@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.person;
+package com.backend.bilanko.models.person.setting;
 
 import jakarta.persistence.*;
 import lombok.*;

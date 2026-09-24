@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.person;
+package com.backend.bilanko.models.person.notification;
 
 /**
  * Types de notifications destinées aux MERCHANT.

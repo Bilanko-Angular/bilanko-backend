@@ -1,6 +1,6 @@
 package com.backend.bilanko.repository.concept.transaction;
 
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

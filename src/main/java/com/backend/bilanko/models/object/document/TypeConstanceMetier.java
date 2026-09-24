@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.document;
+package com.backend.bilanko.models.object.document;
 
 /**
  * Constantes métier scalaires (défauts, paramètres), distinctes des catalogues InfoCle.

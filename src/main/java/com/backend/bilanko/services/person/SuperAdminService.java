@@ -2,8 +2,8 @@ package com.backend.bilanko.services.person;
 
 import com.backend.bilanko.DTO.auth.AuthResponse;
 import com.backend.bilanko.DTO.auth.RegisterRequest;
-import com.backend.bilanko.models.person.Role;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.Role;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.UserRepository;
 import com.backend.bilanko.services.auth.JWTServices;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Objects;
 

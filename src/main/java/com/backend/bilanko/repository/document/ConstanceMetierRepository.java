@@ -1,7 +1,7 @@
 package com.backend.bilanko.repository.document;
 
-import com.backend.bilanko.models.document.ConstanceMetier;
-import com.backend.bilanko.models.document.TypeConstanceMetier;
+import com.backend.bilanko.models.object.document.ConstanceMetier;
+import com.backend.bilanko.models.object.document.TypeConstanceMetier;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

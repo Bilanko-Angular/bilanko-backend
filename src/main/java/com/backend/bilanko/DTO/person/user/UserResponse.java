@@ -2,7 +2,7 @@ package com.backend.bilanko.DTO.person.user;
 
 import com.backend.bilanko.DTO.person.notification.NotificationPreferencesDTO;
 import com.backend.bilanko.DTO.person.preference.AppearancePreferencesDTO;
-import com.backend.bilanko.models.person.Role;
+import com.backend.bilanko.models.person.user.Role;
 
 public record UserResponse(
         long id,

@@ -8,7 +8,7 @@ import com.backend.bilanko.DTO.summary.overview.SaleTimeSeriesPointDTO;
 import com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO;
 import com.backend.bilanko.mapper.SaleMapper;
 import com.backend.bilanko.models.object.product.Product;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Sale;
 import com.backend.bilanko.models.transaction.SaleItem;
 import com.backend.bilanko.repository.concept.transaction.SaleRepository;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import com.backend.bilanko.services.person.NotificationService;
-import com.backend.bilanko.models.person.NotificationType;
+import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

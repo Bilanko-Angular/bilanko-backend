@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.document;
+package com.backend.bilanko.models.object.document;
 
 /**
  * Types de documents générables. Les codes front (pret_bancaire, dsf_smt, …)

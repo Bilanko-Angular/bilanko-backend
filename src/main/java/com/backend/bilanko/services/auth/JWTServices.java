@@ -1,6 +1,6 @@
 package com.backend.bilanko.services.auth;
 
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

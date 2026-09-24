@@ -1,6 +1,6 @@
 package com.backend.bilanko.DTO.person.notification;
 
-import com.backend.bilanko.models.person.NotificationType;
+import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.time.Instant;
 

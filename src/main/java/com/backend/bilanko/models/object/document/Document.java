@@ -1,7 +1,7 @@
-package com.backend.bilanko.models.document;
+package com.backend.bilanko.models.object.document;
 
 import com.backend.bilanko.models.BaseEntity;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

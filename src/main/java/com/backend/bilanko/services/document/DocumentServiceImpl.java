@@ -2,8 +2,8 @@ package com.backend.bilanko.services.document;
 
 import com.backend.bilanko.DTO.object.document.*;
 import com.backend.bilanko.mapper.DocumentMapper;
-import com.backend.bilanko.models.document.*;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.object.document.*;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.models.transaction.Sale;
 import com.backend.bilanko.repository.concept.transaction.ChargeRepository;

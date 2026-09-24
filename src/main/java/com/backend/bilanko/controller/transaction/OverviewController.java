@@ -1,7 +1,7 @@
 package com.backend.bilanko.controller.transaction;
 
 import com.backend.bilanko.DTO.summary.overview.OverviewSummaryDTO;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.services.transaction.OverviewService;
 import com.backend.bilanko.utils.routes.OverviewApiRoutes;
 import lombok.RequiredArgsConstructor;

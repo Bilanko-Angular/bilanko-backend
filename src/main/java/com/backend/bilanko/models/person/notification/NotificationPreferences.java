@@ -1,4 +1,4 @@
-package com.backend.bilanko.models.person;
+package com.backend.bilanko.models.person.notification;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
