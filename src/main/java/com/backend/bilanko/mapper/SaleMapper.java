@@ -1,7 +1,7 @@
 package com.backend.bilanko.mapper;
 
-import com.backend.bilanko.DTO.concept.transaction.SaleItemResponseDTO;
-import com.backend.bilanko.DTO.concept.transaction.SaleResponseDTO;
+import com.backend.bilanko.DTO.transaction.sale.SaleItemResponseDTO;
+import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
 import com.backend.bilanko.models.transaction.Sale;
 import com.backend.bilanko.models.transaction.SaleItem;
 

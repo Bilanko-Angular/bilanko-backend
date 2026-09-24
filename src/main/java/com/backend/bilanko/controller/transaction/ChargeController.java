@@ -1,9 +1,9 @@
 package com.backend.bilanko.controller.transaction;
 
-import com.backend.bilanko.DTO.concept.transaction.ChargeRequestDTO;
-import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
-import com.backend.bilanko.DTO.concept.transaction.ChargeSummaryDTO;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
+import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
+import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
+import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.services.transaction.ChargeService;
 import com.backend.bilanko.utils.routes.ChargeApiRoutes;
 import jakarta.validation.Valid;

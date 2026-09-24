@@ -1,7 +1,8 @@
 package com.backend.bilanko.mapper;
 
-import com.backend.bilanko.DTO.document.*;
-import com.backend.bilanko.models.document.*;
+import com.backend.bilanko.DTO.object.document.*;
+import com.backend.bilanko.models.object.document.*;
+import com.backend.bilanko.models.person.user.User;
 
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +29,7 @@ public final class DocumentMapper {
         return new RegimeFiscalDTO(regime, regime.getFrontCode(), regime.getLabel());
     }
 
-    public static InfosCommercantDTO toCommercantDto(com.backend.bilanko.models.person.User user) {
+    public static InfosCommercantDTO toCommercantDto(User user) {
         return new InfosCommercantDTO(
                 blankToEmpty(user.getCompanyName()),
                 user.getActivite(),

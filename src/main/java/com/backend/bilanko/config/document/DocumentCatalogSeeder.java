@@ -1,10 +1,14 @@
 package com.backend.bilanko.config.document;
 
-import com.backend.bilanko.models.document.*;
-import com.backend.bilanko.repository.document.ConstanceMetierRepository;
-import com.backend.bilanko.repository.document.InfoCleRepository;
+import com.backend.bilanko.models.object.document.ConstanceMetier;
+import com.backend.bilanko.models.object.document.InfoCle;
+import com.backend.bilanko.models.object.document.TypeConstanceMetier;
+import com.backend.bilanko.models.object.document.TypeInfoCle;
+import com.backend.bilanko.repository.object.document.ConstanceMetierRepository;
+import com.backend.bilanko.repository.object.document.InfoCleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -25,7 +29,7 @@ public class DocumentCatalogSeeder implements ApplicationRunner {
     private final ConstanceMetierRepository constanceMetierRepository;
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(@NonNull ApplicationArguments args) {
         seedObjetsPret();
         seedPiecesPret();
         seedPiecesFiscal();

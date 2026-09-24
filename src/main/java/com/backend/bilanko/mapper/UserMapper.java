@@ -1,12 +1,12 @@
 package com.backend.bilanko.mapper;
 
-import com.backend.bilanko.DTO.person.AppearancePreferencesDTO;
-import com.backend.bilanko.DTO.person.NotificationPreferencesDTO;
-import com.backend.bilanko.DTO.person.UserResponse;
-import com.backend.bilanko.DTO.person.UserResponseDTO;
-import com.backend.bilanko.models.person.AppearancePreferences;
-import com.backend.bilanko.models.person.NotificationPreferences;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.DTO.person.preference.AppearancePreferencesDTO;
+import com.backend.bilanko.DTO.person.notification.NotificationPreferencesDTO;
+import com.backend.bilanko.DTO.person.user.UserResponse;
+import com.backend.bilanko.DTO.person.user.UserResponseDTO;
+import com.backend.bilanko.models.person.setting.AppearancePreferences;
+import com.backend.bilanko.models.person.notification.NotificationPreferences;
+import com.backend.bilanko.models.person.user.User;
 
 public final class UserMapper {
     public static UserResponseDTO toUserResponseDto(User user){

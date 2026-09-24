@@ -3,17 +3,17 @@ package com.backend.bilanko.services.auth;
 import com.backend.bilanko.DTO.auth.AuthResponse;
 import com.backend.bilanko.DTO.auth.LoginRequest;
 import com.backend.bilanko.DTO.auth.RegisterRequest;
-import com.backend.bilanko.models.person.Role;
-import com.backend.bilanko.models.person.User;
-import com.backend.bilanko.repository.UserRepository;
+import com.backend.bilanko.models.person.user.Role;
+import com.backend.bilanko.models.person.user.User;
+import com.backend.bilanko.repository.person.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.backend.bilanko.services.person.NotificationService;
-import com.backend.bilanko.models.person.NotificationType;
+import com.backend.bilanko.services.person.notification.NotificationService;
+import com.backend.bilanko.models.person.notification.NotificationType;
 
 @Service
 @RequiredArgsConstructor

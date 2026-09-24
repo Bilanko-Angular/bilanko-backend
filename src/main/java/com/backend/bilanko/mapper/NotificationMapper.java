@@ -1,7 +1,7 @@
 package com.backend.bilanko.mapper;
 
-import com.backend.bilanko.DTO.person.NotificationResponseDTO;
-import com.backend.bilanko.models.person.Notification;
+import com.backend.bilanko.DTO.person.notification.NotificationResponseDTO;
+import com.backend.bilanko.models.person.notification.Notification;
 
 public final class NotificationMapper {
 

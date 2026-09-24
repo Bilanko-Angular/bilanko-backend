@@ -4,10 +4,10 @@ import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Category;
 import com.backend.bilanko.models.object.product.Product;
-import com.backend.bilanko.models.person.User;
-import com.backend.bilanko.repository.product.CategoryRepository;
-import com.backend.bilanko.repository.product.ProductRepository;
-import com.backend.bilanko.services.person.UserServices;
+import com.backend.bilanko.models.person.user.User;
+import com.backend.bilanko.repository.object.product.CategoryRepository;
+import com.backend.bilanko.repository.object.product.ProductRepository;
+import com.backend.bilanko.services.person.user.UserServices;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,7 +60,7 @@ public class ProductServicesImpl implements ProductServices {
 
     @Override
     public List<Product> findMyProducts(String email) {
-        // Vérifie que le user existe, puis retourne ses produits
+        // Vérifie que l'user existe, puis retourne ses produits
         userServices.findUserByEmail(email);
         return repo.findByUserEmail(email);
     }

@@ -1,7 +1,7 @@
 package com.backend.bilanko.repository.person;
 
-import com.backend.bilanko.models.person.Notification;
-import com.backend.bilanko.models.person.User;
+import com.backend.bilanko.models.person.notification.Notification;
+import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
