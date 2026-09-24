@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.concept.transaction;
+package com.backend.bilanko.DTO.transaction.sale;
 
 public record SaleItemResponseDTO(
         long id,

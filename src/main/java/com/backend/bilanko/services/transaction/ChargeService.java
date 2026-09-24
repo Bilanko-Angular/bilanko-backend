@@ -1,8 +1,8 @@
 package com.backend.bilanko.services.transaction;
 
-import com.backend.bilanko.DTO.concept.transaction.ChargeRequestDTO;
-import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
-import com.backend.bilanko.DTO.concept.transaction.ChargeSummaryDTO;
+import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
+import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
+import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.User;

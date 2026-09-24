@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.concept.transaction;
+package com.backend.bilanko.DTO.transaction.sale;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

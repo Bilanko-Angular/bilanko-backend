@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.concept.transaction;
+package com.backend.bilanko.DTO.transaction.charge;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

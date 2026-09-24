@@ -1,8 +1,8 @@
 package com.backend.bilanko.services.transaction;
 
-import com.backend.bilanko.DTO.concept.transaction.ChargeSummaryDTO;
-import com.backend.bilanko.DTO.concept.transaction.OverviewSummaryDTO;
-import com.backend.bilanko.DTO.concept.transaction.SaleSummaryDTO;
+import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
+import com.backend.bilanko.DTO.summary.overview.OverviewSummaryDTO;
+import com.backend.bilanko.DTO.summary.sale.SaleSummaryDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.object.product.ProductServices;

@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.concept.transaction;
+package com.backend.bilanko.DTO.summary.sale;
 
 import java.time.LocalDateTime;
 

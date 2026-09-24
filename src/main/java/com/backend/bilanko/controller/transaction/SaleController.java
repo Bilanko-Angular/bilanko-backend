@@ -1,10 +1,10 @@
 package com.backend.bilanko.controller.transaction;
 
-import com.backend.bilanko.DTO.concept.transaction.SaleRequestDTO;
-import com.backend.bilanko.DTO.concept.transaction.SaleResponseDTO;
-import com.backend.bilanko.DTO.concept.transaction.SaleSummaryDTO;
-import com.backend.bilanko.DTO.concept.transaction.SaleTimeSeriesPointDTO;
-import com.backend.bilanko.DTO.concept.transaction.TopSoldProductDTO;
+import com.backend.bilanko.DTO.transaction.sale.SaleRequestDTO;
+import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
+import com.backend.bilanko.DTO.summary.sale.SaleSummaryDTO;
+import com.backend.bilanko.DTO.summary.overview.SaleTimeSeriesPointDTO;
+import com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO;
 import com.backend.bilanko.models.person.User;
 import com.backend.bilanko.services.transaction.SaleService;
 import com.backend.bilanko.utils.routes.SaleApiRoutes;

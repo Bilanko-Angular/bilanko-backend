@@ -1,6 +1,6 @@
 package com.backend.bilanko.mapper;
 
-import com.backend.bilanko.DTO.concept.transaction.ChargeResponseDTO;
+import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.models.transaction.Charge;
 
 

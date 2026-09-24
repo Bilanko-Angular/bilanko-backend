@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.concept.transaction;
+package com.backend.bilanko.DTO.summary.overview;
 
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 
