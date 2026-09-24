@@ -1,4 +1,4 @@
-package com.backend.bilanko.config;
+package com.backend.bilanko.config.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

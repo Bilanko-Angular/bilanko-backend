@@ -1,4 +1,4 @@
-package com.backend.bilanko.config;
+package com.backend.bilanko.config.app;
 
 import com.backend.bilanko.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;

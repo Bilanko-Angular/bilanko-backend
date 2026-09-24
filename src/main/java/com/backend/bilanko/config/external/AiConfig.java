@@ -1,4 +1,4 @@
-package com.backend.bilanko.config;
+package com.backend.bilanko.config.external;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;

@@ -1,4 +1,4 @@
-package com.backend.bilanko.config;
+package com.backend.bilanko.config.external;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
