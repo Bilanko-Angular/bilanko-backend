@@ -1,9 +1,12 @@
 package com.backend.bilanko.models.object.document;
 
+import lombok.Getter;
+
 /**
  * Types de documents générables. Les codes front (pret_bancaire, dsf_smt, …)
  * sont mappés via {@link #getFrontCode()}.
  */
+@Getter
 public enum TypeDocument {
     DOCUMENT_PRET("pret_bancaire", "Demande de prêt bancaire"),
     DOCUMENT_FISCAL("dsf_smt", "Dossier fiscal (DSF / SMT)"),
@@ -18,14 +21,6 @@ public enum TypeDocument {
     TypeDocument(String frontCode, String label) {
         this.frontCode = frontCode;
         this.label = label;
-    }
-
-    public String getFrontCode() {
-        return frontCode;
-    }
-
-    public String getLabel() {
-        return label;
     }
 
     public static TypeDocument fromFrontCode(String frontCode) {

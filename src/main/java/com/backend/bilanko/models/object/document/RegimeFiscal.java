@@ -1,5 +1,8 @@
 package com.backend.bilanko.models.object.document;
 
+import lombok.Getter;
+
+@Getter
 public enum RegimeFiscal {
     CONTRIBUTION_LIBERATOIRE(
             "contribution_liberatoire",
@@ -20,14 +23,6 @@ public enum RegimeFiscal {
     RegimeFiscal(String frontCode, String label) {
         this.frontCode = frontCode;
         this.label = label;
-    }
-
-    public String getFrontCode() {
-        return frontCode;
-    }
-
-    public String getLabel() {
-        return label;
     }
 
     public static RegimeFiscal fromFrontCode(String frontCode) {

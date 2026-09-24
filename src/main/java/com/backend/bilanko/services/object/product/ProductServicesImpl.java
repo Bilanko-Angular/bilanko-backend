@@ -60,7 +60,7 @@ public class ProductServicesImpl implements ProductServices {
 
     @Override
     public List<Product> findMyProducts(String email) {
-        // Vérifie que le user existe, puis retourne ses produits
+        // Vérifie que l'user existe, puis retourne ses produits
         userServices.findUserByEmail(email);
         return repo.findByUserEmail(email);
     }
