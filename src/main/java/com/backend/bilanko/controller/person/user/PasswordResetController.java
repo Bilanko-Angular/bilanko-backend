@@ -1,4 +1,4 @@
-package com.backend.bilanko.controller.auth;
+package com.backend.bilanko.controller.person.user;
 
 import com.backend.bilanko.DTO.auth.ForgotPasswordRequest;
 import com.backend.bilanko.DTO.auth.ForgotPasswordResponse;

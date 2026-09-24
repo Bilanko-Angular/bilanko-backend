@@ -1,4 +1,4 @@
-package com.backend.bilanko.controller.person;
+package com.backend.bilanko.controller.person.user;
 
 import com.backend.bilanko.DTO.person.AppUpdateBroadcastRequest;
 import com.backend.bilanko.DTO.person.NotificationPageDTO;
