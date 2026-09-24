@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.models.person.NotificationType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ChargeService {
 
     private final ChargeRepository chargeRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public ChargeResponseDTO createCharge(ChargeRequestDTO dto, User currentUser) {
@@ -33,6 +36,17 @@ public class ChargeService {
                 .build();
 
         Charge saved = chargeRepository.save(charge);
+
+        notificationService.createNotification(
+                currentUser,
+                NotificationType.NEW_CHARGE,
+                "Nouvelle charge",
+                String.format("Une charge de %.2f a été ajoutée (%s).", 
+                        saved.getAmount(), 
+                        saved.getLabel()),
+                saved.getId()
+        );
+
         return ChargeMapper.toDto(saved);
     }
 

@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.models.person.NotificationType;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JWTServices jwtService;
     private final AuthenticationManager authenticationManager;
+    private final NotificationService notificationService;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
@@ -36,6 +39,14 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        notificationService.createNotification(
+                user,
+                NotificationType.WELCOME,
+                "Bienvenue sur Bilanko",
+                "Votre compte a été créé avec succès !",
+                null
+        );
 
         String token = jwtService.generateToken(user);
         return new AuthResponse(token);

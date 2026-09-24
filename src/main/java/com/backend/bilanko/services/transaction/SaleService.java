@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.models.person.NotificationType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +36,7 @@ public class SaleService {
 
     private final SaleRepository saleRepository;
     private final ProductRepository productRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO dto, User currentUser) {
@@ -50,6 +53,17 @@ public class SaleService {
         applyItems(sale, dto.items(), currentUser);
 
         Sale saved = saleRepository.save(sale);
+
+        notificationService.createNotification(
+                currentUser,
+                NotificationType.NEW_SALE,
+                "Nouvelle vente",
+                String.format("Une vente de %.2f a été enregistrée%s.", 
+                        saved.getTotalAmount(), 
+                        (dto.customerName() != null && !dto.customerName().isBlank()) ? " pour " + dto.customerName() : ""),
+                saved.getId()
+        );
+
         return SaleMapper.toDto(saved);
     }
 
