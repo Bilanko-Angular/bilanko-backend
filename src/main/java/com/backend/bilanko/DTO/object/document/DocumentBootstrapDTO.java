@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.document;
+package com.backend.bilanko.DTO.object.document;
 
 import java.util.List;
 import java.util.Map;

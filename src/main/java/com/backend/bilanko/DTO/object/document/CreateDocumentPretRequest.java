@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.document;
+package com.backend.bilanko.DTO.object.document;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

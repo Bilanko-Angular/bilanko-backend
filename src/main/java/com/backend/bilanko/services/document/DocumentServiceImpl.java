@@ -1,6 +1,6 @@
 package com.backend.bilanko.services.document;
 
-import com.backend.bilanko.DTO.document.*;
+import com.backend.bilanko.DTO.object.document.*;
 import com.backend.bilanko.mapper.DocumentMapper;
 import com.backend.bilanko.models.document.*;
 import com.backend.bilanko.models.person.User;

@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.document;
+package com.backend.bilanko.DTO.object.document;
 
 /**
  * Infos commerçant préremplies depuis le profil User (modifiables à la génération).

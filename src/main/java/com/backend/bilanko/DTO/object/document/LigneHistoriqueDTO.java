@@ -1,4 +1,4 @@
-package com.backend.bilanko.DTO.document;
+package com.backend.bilanko.DTO.object.document;
 
 public record LigneHistoriqueDTO(
         String cle,
