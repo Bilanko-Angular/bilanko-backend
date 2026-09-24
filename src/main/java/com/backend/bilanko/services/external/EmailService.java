@@ -1,4 +1,4 @@
-package com.backend.bilanko.services.auth;
+package com.backend.bilanko.services.external;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

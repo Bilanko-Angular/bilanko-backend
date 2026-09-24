@@ -1,4 +1,4 @@
-package com.backend.bilanko.services.person;
+package com.backend.bilanko.services.person.superAdmin;
 
 import com.backend.bilanko.DTO.auth.AuthResponse;
 import com.backend.bilanko.DTO.auth.RegisterRequest;

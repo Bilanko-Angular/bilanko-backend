@@ -1,10 +1,12 @@
-package com.backend.bilanko.services.auth;
+package com.backend.bilanko.services.person.user;
 
 import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordResponse;
 import com.backend.bilanko.models.person.setting.PasswordResetOtp;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.person.PasswordResetOtpRepository;
 import com.backend.bilanko.repository.person.UserRepository;
+import com.backend.bilanko.services.external.EmailService;
+import com.backend.bilanko.services.auth.JWTServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

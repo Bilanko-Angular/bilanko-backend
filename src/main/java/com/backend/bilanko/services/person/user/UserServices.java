@@ -1,4 +1,4 @@
-package com.backend.bilanko.services.person;
+package com.backend.bilanko.services.person.user;
 
 import com.backend.bilanko.DTO.person.preference.AppearancePreferencesDTO;
 import com.backend.bilanko.DTO.person.passwordReset.ChangePasswordRequest;

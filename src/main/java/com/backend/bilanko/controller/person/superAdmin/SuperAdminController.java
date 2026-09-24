@@ -2,7 +2,7 @@ package com.backend.bilanko.controller.person.superAdmin;
 
 import com.backend.bilanko.DTO.auth.AuthResponse;
 import com.backend.bilanko.DTO.auth.RegisterRequest;
-import com.backend.bilanko.services.person.SuperAdminService;
+import com.backend.bilanko.services.person.superAdmin.SuperAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

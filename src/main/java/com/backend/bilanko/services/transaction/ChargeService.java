@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.services.person.notification.NotificationService;
 import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.time.LocalDate;

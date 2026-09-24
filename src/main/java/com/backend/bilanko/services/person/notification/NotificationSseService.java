@@ -1,4 +1,4 @@
-package com.backend.bilanko.services.person;
+package com.backend.bilanko.services.person.notification;
 
 import com.backend.bilanko.DTO.person.notification.NotificationResponseDTO;
 import lombok.extern.slf4j.Slf4j;

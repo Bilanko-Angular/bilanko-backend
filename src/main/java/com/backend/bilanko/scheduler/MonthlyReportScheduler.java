@@ -4,7 +4,7 @@ import com.backend.bilanko.models.person.notification.NotificationType;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.person.UserRepository;
-import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.services.person.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

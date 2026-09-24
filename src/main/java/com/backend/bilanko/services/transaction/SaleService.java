@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.services.person.notification.NotificationService;
 import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.time.LocalDateTime;

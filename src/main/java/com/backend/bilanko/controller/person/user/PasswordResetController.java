@@ -4,7 +4,7 @@ import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordRequest;
 import com.backend.bilanko.DTO.person.passwordReset.ForgotPasswordResponse;
 import com.backend.bilanko.DTO.person.passwordReset.ResetPasswordRequest;
 import com.backend.bilanko.DTO.person.passwordReset.VerifyOtpRequest;
-import com.backend.bilanko.services.auth.PasswordResetService;
+import com.backend.bilanko.services.person.user.PasswordResetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

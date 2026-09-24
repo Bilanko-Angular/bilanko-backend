@@ -1,4 +1,4 @@
-package com.backend.bilanko.services.document;
+package com.backend.bilanko.services.object.document;
 
 import com.backend.bilanko.DTO.object.document.*;
 import com.backend.bilanko.models.person.user.User;

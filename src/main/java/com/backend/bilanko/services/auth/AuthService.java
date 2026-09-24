@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.backend.bilanko.services.person.NotificationService;
+import com.backend.bilanko.services.person.notification.NotificationService;
 import com.backend.bilanko.models.person.notification.NotificationType;
 
 @Service

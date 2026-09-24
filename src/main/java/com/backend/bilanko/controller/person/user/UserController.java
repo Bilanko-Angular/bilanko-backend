@@ -8,7 +8,7 @@ import com.backend.bilanko.DTO.person.user.UserResponse;
 import com.backend.bilanko.mapper.UserMapper;
 import com.backend.bilanko.models.person.notification.NotificationPreferences;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.services.person.UserServices;
+import com.backend.bilanko.services.person.user.UserServices;
 import com.backend.bilanko.utils.routes.UserApiRoutes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

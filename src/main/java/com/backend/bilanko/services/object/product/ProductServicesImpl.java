@@ -7,7 +7,7 @@ import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.object.product.CategoryRepository;
 import com.backend.bilanko.repository.object.product.ProductRepository;
-import com.backend.bilanko.services.person.UserServices;
+import com.backend.bilanko.services.person.user.UserServices;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
