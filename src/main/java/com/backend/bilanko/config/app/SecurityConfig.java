@@ -24,17 +24,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Activer la gestion du CORS pour qu'il utilise votre CorsConfig (ou Bean CorsConfigurationSource)
+                // 1. Activer la gestion des CORS pour qu'il utilise votre CorsConfig (ou Bean CorsConfigurationSource)
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // 2. Laisser passer toutes les requêtes preflight OPTIONS sans authentification
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        // Catalogue public : lecture des catégories sans authentification
-                        .requestMatchers(HttpMethod.GET, "/api/categories/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/search").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/{id}").permitAll()
+                        .requestMatchers("/super/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
