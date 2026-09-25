@@ -32,5 +32,5 @@ public class Charge extends BaseEntity {
     private User user;
 
     @ManyToOne(optional = true)
-    private ChargeCategory category;
+    private com.backend.bilanko.models.object.product.Category category;
 }
