@@ -7,6 +7,8 @@ public record ChargeResponseDTO(
         String label,
         String supplier,
         double amount,
-        LocalDate date
+        LocalDate date,
+        Long categoryId,
+        String categoryName
 ) {
 }

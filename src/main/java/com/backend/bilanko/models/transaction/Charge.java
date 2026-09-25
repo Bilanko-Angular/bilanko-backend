@@ -30,4 +30,7 @@ public class Charge extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne(optional = true)
+    private ChargeCategory category;
 }

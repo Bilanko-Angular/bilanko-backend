@@ -23,15 +23,23 @@ import java.util.List;
 public class ChargeService {
 
     private final ChargeRepository chargeRepository;
+    private final com.backend.bilanko.repository.transaction.ChargeCategoryRepository chargeCategoryRepository;
     private final NotificationService notificationService;
 
     @Transactional
     public ChargeResponseDTO createCharge(ChargeRequestDTO dto, User currentUser) {
+        com.backend.bilanko.models.transaction.ChargeCategory category = null;
+        if (dto.categoryId() != null) {
+            category = chargeCategoryRepository.findById(dto.categoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));
+        }
+
         Charge charge = Charge.builder()
                 .label(dto.label())
                 .supplier(dto.supplier())
                 .amount(dto.amount())
                 .date(dto.date())
+                .category(category)
                 .user(currentUser)
                 .build();
 
@@ -70,11 +78,18 @@ public class ChargeService {
     @Transactional
     public ChargeResponseDTO updateCharge(long id, ChargeRequestDTO dto, User currentUser) {
         Charge charge = findOwnedCharge(id, currentUser);
+        
+        com.backend.bilanko.models.transaction.ChargeCategory category = null;
+        if (dto.categoryId() != null) {
+            category = chargeCategoryRepository.findById(dto.categoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));
+        }
 
         charge.setLabel(dto.label());
         charge.setSupplier(dto.supplier());
         charge.setAmount(dto.amount());
         charge.setDate(dto.date());
+        charge.setCategory(category);
 
         Charge saved = chargeRepository.save(charge);
         return ChargeMapper.toDto(saved);
