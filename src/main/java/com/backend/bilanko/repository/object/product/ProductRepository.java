@@ -10,5 +10,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     // Tous les produits appartenant à un user (via son email)
     List<Product> findByUserEmail(String email);
+
+    int countByUser_Id(long userId);
 }
 
