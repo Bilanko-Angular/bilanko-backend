@@ -50,6 +50,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .active(user.isActive())
                 .lastConnectionDate(user.getLastConnectionDate())
                 .numberOfProducts(numberOfProducts)
+                .createAt(user.getCreatedAt())
                 .build();
     }
 

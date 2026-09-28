@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -23,4 +24,5 @@ public class AdminUserResponseDTO {
     private boolean active;
     private Instant lastConnectionDate;
     private int numberOfProducts;
+    private Instant createAt;
 }

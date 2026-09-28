@@ -1,5 +1,6 @@
 package com.backend.bilanko.models.person.user;
 
+import com.backend.bilanko.models.BaseEntity;
 import com.backend.bilanko.models.person.notification.NotificationPreferences;
 import com.backend.bilanko.models.person.setting.AppearancePreferences;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-import com.backend.bilanko.models.BaseEntity;
 
 @Entity
 @Data
