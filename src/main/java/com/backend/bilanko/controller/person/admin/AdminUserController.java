@@ -38,7 +38,7 @@ public class AdminUserController {
         return ResponseEntity.ok(adminUserService.searchUsers(currentAdminEmail(), keyword, active, role, page, size));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<AdminUserResponseDTO> createUser(@Valid @RequestBody AdminUserCreateRequest request) {
         return ResponseEntity.ok(adminUserService.createUser(currentAdminEmail(), request));
     }

@@ -2,6 +2,7 @@ package com.backend.bilanko.repository.transaction;
 
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.models.person.user.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,7 +36,7 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
             "(:categoryId IS NULL OR c.chargeCategory.id = :categoryId) AND " +
             "(CAST(:startDate AS date) IS NULL OR c.date >= :startDate) AND " +
             "(CAST(:endDate AS date) IS NULL OR c.date <= :endDate)")
-    org.springframework.data.domain.Page<Charge> adminSearchCharges(
+    Page<Charge> adminSearchCharges(
             @Param("keyword") String keyword,
             @Param("categoryId") Long categoryId,
             @Param("startDate") LocalDate startDate,
