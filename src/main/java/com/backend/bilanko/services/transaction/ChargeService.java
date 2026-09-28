@@ -39,7 +39,7 @@ public class ChargeService {
                 .supplier(dto.supplier())
                 .amount(dto.amount())
                 .date(dto.date())
-                .category(category)
+                .chargeCategory(category)
                 .user(currentUser)
                 .build();
 
@@ -89,7 +89,7 @@ public class ChargeService {
         charge.setSupplier(dto.supplier());
         charge.setAmount(dto.amount());
         charge.setDate(dto.date());
-        charge.setCategory(category);
+        charge.setChargeCategory(category);
 
         Charge saved = chargeRepository.save(charge);
         return ChargeMapper.toDto(saved);

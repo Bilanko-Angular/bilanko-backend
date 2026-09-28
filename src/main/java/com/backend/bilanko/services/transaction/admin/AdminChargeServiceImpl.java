@@ -46,8 +46,8 @@ public class AdminChargeServiceImpl implements AdminChargeService {
                 .label(charge.getLabel())
                 .supplier(charge.getSupplier())
                 .amount(charge.getAmount())
-                .categoryId(charge.getCategory() != null ? charge.getCategory().getId() : null)
-                .categoryName(charge.getCategory() != null ? charge.getCategory().getName() : null)
+                .categoryId(charge.getChargeCategory() != null ? charge.getChargeCategory().getId() : null)
+                .categoryName(charge.getChargeCategory() != null ? charge.getChargeCategory().getName() : null)
                 .userId(charge.getUser().getId())
                 .userName(charge.getUser().getName())
                 .userSubname(charge.getUser().getSubname())
@@ -111,7 +111,7 @@ public class AdminChargeServiceImpl implements AdminChargeService {
                 .supplier(request.getSupplier())
                 .amount(request.getAmount())
                 .date(request.getDate())
-                .category(category)
+                .chargeCategory(category)
                 .user(targetUser)
                 .build();
 
@@ -136,7 +136,7 @@ public class AdminChargeServiceImpl implements AdminChargeService {
         charge.setSupplier(request.getSupplier());
         charge.setAmount(request.getAmount());
         charge.setDate(request.getDate());
-        charge.setCategory(category);
+        charge.setChargeCategory(category);
 
         Charge saved = chargeRepository.save(charge);
         return mapToDTO(saved);

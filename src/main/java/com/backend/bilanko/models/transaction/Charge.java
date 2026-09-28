@@ -31,6 +31,7 @@ public class Charge extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
-    @ManyToOne(optional = true)
-    private com.backend.bilanko.models.object.product.Category category;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "charge_category_id", nullable = false)
+    private ChargeCategory chargeCategory;
 }

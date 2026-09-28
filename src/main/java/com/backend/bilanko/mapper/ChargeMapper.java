@@ -16,8 +16,8 @@ public final class ChargeMapper {
                 charge.getSupplier(),
                 charge.getAmount(),
                 charge.getDate(),
-                charge.getCategory() != null ? charge.getCategory().getId() : null,
-                charge.getCategory() != null ? charge.getCategory().getName() : null
+                charge.getChargeCategory() != null ? charge.getChargeCategory().getId() : null,
+                charge.getChargeCategory() != null ? charge.getChargeCategory().getName() : null
         );
     }
 }
