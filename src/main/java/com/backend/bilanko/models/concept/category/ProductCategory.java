@@ -12,9 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "category")
 @Builder
 public class ProductCategory extends BaseCategoryModel {
     @ManyToMany
+    @JoinTable(
+            name = "product_category_product",
+            joinColumns = @JoinColumn(name = "product_category_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
 
 }

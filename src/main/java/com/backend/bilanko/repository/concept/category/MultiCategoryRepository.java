@@ -1,20 +1,41 @@
 package com.backend.bilanko.repository.concept.category;
 
+import com.backend.bilanko.DTO.concept.category.CategorySearch;
+import com.backend.bilanko.DTO.concept.category.CategorySearchView;
 import com.backend.bilanko.models.concept.category.ProductCategory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MultiCategoryRepository extends Repository<ProductCategory, Long> {
 
     @Query(value = """
-           SELECT id, name, 'PRODUCT' AS type
-           FROM product_category
-           WHERE lower(unaccent(name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
-           UNION ALL
-           SELECT id, name, 'SERVICE' AS type
-           FROM service_category
-           WHERE lower(unaccent(name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
-           """, nativeQuery = true)
+       SELECT c.id, c.name, 'PRODUCT' AS type,
+              (SELECT count(DISTINCT pcp.product_id)
+               FROM product_category_product pcp
+               WHERE pcp.product_category_id = c.id) AS "usageCount",
+              (SELECT count(DISTINCT p.user_id)
+               FROM product_category_product pcp
+               JOIN product p ON p.id = pcp.product_id
+               WHERE pcp.product_category_id = c.id) AS "userCount"
+       FROM category c
+       WHERE lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
+
+       UNION ALL
+
+       SELECT c.id, c.name, 'CHARGE' AS type,
+              (SELECT count(*)
+               FROM charge ch
+               WHERE ch.charge_category_id = c.id) AS "usageCount",
+              (SELECT count(DISTINCT ch.user_id)
+               FROM charge ch
+               WHERE ch.charge_category_id = c.id) AS "userCount"
+       FROM charge_category c
+       WHERE lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
+
+       ORDER BY name
+       """, nativeQuery = true)
     List<CategorySearchView> searchAll(@Param("keyword") String keyword);
 }
