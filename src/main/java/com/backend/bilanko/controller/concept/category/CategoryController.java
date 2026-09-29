@@ -1,8 +1,8 @@
-package com.backend.bilanko.controller.object.product;
+package com.backend.bilanko.controller.concept.category;
 
 import com.backend.bilanko.DTO.object.product.CategoryDTO;
 import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
-import com.backend.bilanko.models.object.product.Category;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.services.object.product.CategoryServices;
 import com.backend.bilanko.utils.routes.CategoryApiRoutes;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class CategoryController {
     // ── CREATE ─────────────────────────────────────────────────────────────
     // POST /api/categories/create  →  ADMIN uniquement
     @PostMapping(CategoryApiRoutes.create_category)
-    public ResponseEntity<Category> create(
+    public ResponseEntity<ProductCategory> create(
             @RequestBody CategoryDTO categoryDTO,
             Authentication authentication) {
 
@@ -34,13 +34,13 @@ public class CategoryController {
     // ── READ ───────────────────────────────────────────────────────────────
     // GET /api/categories/all  →  public (catalogue)
     @GetMapping(CategoryApiRoutes.find_all)
-    public ResponseEntity<List<Category>> findAll() {
+    public ResponseEntity<List<ProductCategory>> findAll() {
         return ResponseEntity.ok(categoryServices.findAll());
     }
 
     // GET /api/categories/{id}
     @GetMapping(CategoryApiRoutes.find_by_id)
-    public ResponseEntity<Category> findById(@PathVariable long id) {
+    public ResponseEntity<ProductCategory> findById(@PathVariable long id) {
         return ResponseEntity.ok(categoryServices.findById(id));
     }
 
@@ -54,7 +54,7 @@ public class CategoryController {
     // ── UPDATE ─────────────────────────────────────────────────────────────
     // PUT /api/categories/{id}  →  ADMIN uniquement
     @PutMapping(CategoryApiRoutes.update_category)
-    public ResponseEntity<Category> update(
+    public ResponseEntity<ProductCategory> update(
             @PathVariable long id,
             @RequestBody CategoryDTO categoryDTO,
             Authentication authentication) {

@@ -1,7 +1,7 @@
 package com.backend.bilanko.services.ai;
 
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
-import com.backend.bilanko.models.object.product.Category;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.repository.object.product.CategoryRepository;
 import tools.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class GroqTranscriptionService {
     private ProductRecognitionResponseDTO extractFromTranscript(String transcript) {
         List<String> existingCategories = categoryRepository.findAll()
                 .stream()
-                .map(Category::getName)
+                .map(ProductCategory::getName)
                 .toList();
 
         return groqChatClient.prompt()

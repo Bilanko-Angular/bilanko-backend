@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/v1/admin/charges")
+@RequestMapping("/api/admin/charges")
 @RequiredArgsConstructor
 public class AdminChargeController {
 

@@ -2,7 +2,7 @@ package com.backend.bilanko.services.object.product;
 
 import com.backend.bilanko.DTO.object.product.CategoryDTO;
 import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
-import com.backend.bilanko.models.object.product.Category;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.repository.object.product.CategoryRepository;
@@ -24,19 +24,19 @@ public class CategoryServicesImpl implements CategoryServices {
 
     // ── CREATE ──────────────────────────────────────────────────────────────
     @Override
-    public Category create(CategoryDTO categoryDTO, String email) {
+    public ProductCategory create(CategoryDTO categoryDTO, String email) {
         requireAdmin(email);
         return categoryRepository.save(buildCategory(categoryDTO));
     }
 
     // ── READ ─────────────────────────────────────────────────────────────────
     @Override
-    public List<Category> findAll() {
+    public List<ProductCategory> findAll() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Category findById(long id) {
+    public ProductCategory findById(long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Catégorie introuvable : id=" + id));
@@ -59,9 +59,9 @@ public class CategoryServicesImpl implements CategoryServices {
     }
     // ── UPDATE ───────────────────────────────────────────────────────────────
     @Override
-    public Category update(long id, CategoryDTO categoryDTO, String email) {
+    public ProductCategory update(long id, CategoryDTO categoryDTO, String email) {
         requireAdmin(email);
-        Category existing = findById(id);
+        ProductCategory existing = findById(id);
         List<Product> products = productRepository.findAllById(categoryDTO.idProducts());
         existing.setName(categoryDTO.name());
         existing.setProducts(products);
@@ -72,7 +72,7 @@ public class CategoryServicesImpl implements CategoryServices {
     @Override
     public void delete(long id, String email) {
         requireAdmin(email);
-        Category existing = findById(id);
+        ProductCategory existing = findById(id);
         categoryRepository.delete(existing);
     }
 
@@ -83,9 +83,9 @@ public class CategoryServicesImpl implements CategoryServices {
         }
     }
 
-    private Category buildCategory(CategoryDTO categoryDTO) {
+    private ProductCategory buildCategory(CategoryDTO categoryDTO) {
         List<Product> products = productRepository.findAllById(categoryDTO.idProducts());
-        return Category.builder()
+        return ProductCategory.builder()
                 .name(categoryDTO.name())
                 .products(products)
                 .build();

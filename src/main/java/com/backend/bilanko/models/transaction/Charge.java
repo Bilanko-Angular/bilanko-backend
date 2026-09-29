@@ -1,5 +1,6 @@
 package com.backend.bilanko.models.transaction;
 
+import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import lombok.*;

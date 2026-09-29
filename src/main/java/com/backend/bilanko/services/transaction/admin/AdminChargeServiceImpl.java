@@ -7,7 +7,7 @@ import com.backend.bilanko.DTO.transaction.admin.AdminChargeUpdateRequest;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Charge;
-import com.backend.bilanko.models.transaction.ChargeCategory;
+import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.repository.person.UserRepository;
 import com.backend.bilanko.repository.transaction.ChargeCategoryRepository;
 import com.backend.bilanko.repository.transaction.ChargeRepository;

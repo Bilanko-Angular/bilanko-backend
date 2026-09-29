@@ -1,7 +1,7 @@
 package com.backend.bilanko.services.ai;
 
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
-import com.backend.bilanko.models.object.product.Category;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.repository.object.product.CategoryRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.content.Media;
@@ -31,7 +31,7 @@ public class AiProductRecognitionService {
     public ProductRecognitionResponseDTO recognize(MultipartFile image) {
         List<String> existingCategories = categoryRepository.findAll()
                 .stream()
-                .map(Category::getName)
+                .map(ProductCategory::getName)
                 .toList();
 
         Media imageMedia = new Media(

@@ -1,11 +1,11 @@
-package com.backend.bilanko.models.object.product;
+package com.backend.bilanko.models.concept.category;
 
+import com.backend.bilanko.models.object.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
-import com.backend.bilanko.models.BaseEntity;
 
 @Getter
 @Setter
@@ -13,11 +13,8 @@ import com.backend.bilanko.models.BaseEntity;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Category extends BaseEntity {
-    @Column(nullable = false)
-    private String name;
+public class ProductCategory extends BaseCategoryModel {
     @ManyToMany
     private List<Product> products;
-
 
 }

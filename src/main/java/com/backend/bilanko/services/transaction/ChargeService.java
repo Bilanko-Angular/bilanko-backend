@@ -3,6 +3,7 @@ package com.backend.bilanko.services.transaction;
 import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
 import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
+import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.user.User;
@@ -28,7 +29,7 @@ public class ChargeService {
 
     @Transactional
     public ChargeResponseDTO createCharge(ChargeRequestDTO dto, User currentUser) {
-        com.backend.bilanko.models.transaction.ChargeCategory category = null;
+        ChargeCategory category = null;
         if (dto.categoryId() != null) {
             category = chargeCategoryRepository.findById(dto.categoryId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));
@@ -79,7 +80,7 @@ public class ChargeService {
     public ChargeResponseDTO updateCharge(long id, ChargeRequestDTO dto, User currentUser) {
         Charge charge = findOwnedCharge(id, currentUser);
         
-        com.backend.bilanko.models.transaction.ChargeCategory category = null;
+        ChargeCategory category = null;
         if (dto.categoryId() != null) {
             category = chargeCategoryRepository.findById(dto.categoryId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));

@@ -2,7 +2,7 @@ package com.backend.bilanko.services.object.product;
 
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
-import com.backend.bilanko.models.object.product.Category;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.object.product.CategoryRepository;
@@ -81,7 +81,7 @@ public class ProductServicesImpl implements ProductServices {
         // Seul le propriétaire peut modifier son produit
         checkOwnership(existing, email);
 
-        List<Category> categories = productDTO.idCategories()
+        List<ProductCategory> categories = productDTO.idCategories()
                 .map(categoryRepository::findAllById)
                 .orElseGet(List::of);
 
@@ -164,7 +164,7 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     private Product buildProduct(ProductDTO dto, User user) {
-        List<Category> categories = dto.idCategories()
+        List<ProductCategory> categories = dto.idCategories()
                 .map(categoryRepository::findAllById)
                 .orElseGet(List::of);
 
