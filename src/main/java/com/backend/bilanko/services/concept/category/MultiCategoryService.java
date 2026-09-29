@@ -13,11 +13,13 @@ import java.util.List;
 public class MultiCategoryService {
     private final MultiCategoryRepository multiCategoryRepository;
 
-    public List<CategorySearch> search(String keyword) {
+    public List<CategorySearch> search(String keyword, CategoryType categoryType) {
         if (keyword == null || keyword.isBlank()) {
             return List.of();
         }
-        return multiCategoryRepository.searchAll(keyword.trim()).stream()
+        String type = categoryType == null ? null : categoryType.name();
+
+        return multiCategoryRepository.searchAll(keyword.trim(), type).stream()
                 .map(v -> new CategorySearch(
                         v.getId(),
                         v.getName(),

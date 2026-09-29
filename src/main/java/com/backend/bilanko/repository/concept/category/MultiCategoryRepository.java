@@ -21,7 +21,8 @@ public interface MultiCategoryRepository extends Repository<ProductCategory, Lon
                JOIN product p ON p.id = pcp.product_id
                WHERE pcp.product_category_id = c.id) AS "userCount"
        FROM category c
-       WHERE lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
+       WHERE (CAST(:type AS text) IS NULL OR CAST(:type AS text) = 'PRODUCT')
+         AND lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
 
        UNION ALL
 
@@ -33,9 +34,11 @@ public interface MultiCategoryRepository extends Repository<ProductCategory, Lon
                FROM charge ch
                WHERE ch.charge_category_id = c.id) AS "userCount"
        FROM charge_category c
-       WHERE lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
+       WHERE (CAST(:type AS text) IS NULL OR CAST(:type AS text) = 'CHARGE')
+         AND lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
 
        ORDER BY name
        """, nativeQuery = true)
-    List<CategorySearchView> searchAll(@Param("keyword") String keyword);
+    List<CategorySearchView> searchAll(@Param("keyword") String keyword,
+                                       @Param("type") String type);
 }
