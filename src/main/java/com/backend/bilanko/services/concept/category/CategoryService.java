@@ -1,10 +1,28 @@
 package com.backend.bilanko.services.concept.category;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
-@Service
-public class CategoryService {
-    public Category createCategory(CreateCategoryRequest category) {}
+import com.backend.bilanko.models.concept.category.BaseCategoryModel;
+import com.backend.bilanko.models.concept.category.CategoryType;
+import com.backend.bilanko.utils.annotation.AdminOnly;
+import com.backend.bilanko.utils.annotation.MerchantOnly;
+
+import java.util.List;
+
+public interface CategoryService {
+    CategoryType type();
+
+    @AdminOnly
+    BaseCategoryModel create(String name);
+
+    @MerchantOnly
+    List<? extends BaseCategoryModel> findAll();
+
+    @AdminOnly
+    BaseCategoryModel findById(long id);
+
+    @AdminOnly
+    BaseCategoryModel update(long id, String name);
+
+    @AdminOnly
+    void delete(long id);
 }

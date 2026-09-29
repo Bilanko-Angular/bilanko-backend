@@ -5,7 +5,7 @@ import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.User;
-import com.backend.bilanko.repository.object.product.CategoryRepository;
+import com.backend.bilanko.repository.concept.category.ProductCategoryRepository;
 import com.backend.bilanko.repository.object.product.ProductRepository;
 import com.backend.bilanko.services.person.user.UserServices;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ProductServicesImpl implements ProductServices {
     public final ProductRepository repo;
     public final UserServices userServices;
-    public final CategoryRepository categoryRepository;
+    public final ProductCategoryRepository productCategoryRepository;
 
     private String generateReference(String name, long userId) {
         String prefix = name.length() >= 3 ? name.substring(0, 3).toUpperCase() : name.toUpperCase();
@@ -82,7 +82,7 @@ public class ProductServicesImpl implements ProductServices {
         checkOwnership(existing, email);
 
         List<ProductCategory> categories = productDTO.idCategories()
-                .map(categoryRepository::findAllById)
+                .map(productCategoryRepository::findAllById)
                 .orElseGet(List::of);
 
         existing.setName(productDTO.name());
@@ -165,7 +165,7 @@ public class ProductServicesImpl implements ProductServices {
 
     private Product buildProduct(ProductDTO dto, User user) {
         List<ProductCategory> categories = dto.idCategories()
-                .map(categoryRepository::findAllById)
+                .map(productCategoryRepository::findAllById)
                 .orElseGet(List::of);
 
         return Product.builder()

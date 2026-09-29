@@ -2,7 +2,7 @@ package com.backend.bilanko.services.ai;
 
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
 import com.backend.bilanko.models.concept.category.ProductCategory;
-import com.backend.bilanko.repository.object.product.CategoryRepository;
+import com.backend.bilanko.repository.concept.category.ProductCategoryRepository;
 import tools.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GroqTranscriptionService {
 
     private final ChatClient groqChatClient;
-    private final CategoryRepository categoryRepository;
+    private final ProductCategoryRepository productCategoryRepository;
     private final RestClient restClient = RestClient.create();
 
     @Value("${groq.api-key}")
@@ -52,7 +52,7 @@ public class GroqTranscriptionService {
     }
 
     private ProductRecognitionResponseDTO extractFromTranscript(String transcript) {
-        List<String> existingCategories = categoryRepository.findAll()
+        List<String> existingCategories = productCategoryRepository.findAll()
                 .stream()
                 .map(ProductCategory::getName)
                 .toList();

@@ -2,8 +2,8 @@ package com.backend.bilanko.mapper;
 
 import com.backend.bilanko.DTO.ai.ProductDescriptionClean;
 import com.backend.bilanko.DTO.ai.ProductRecognitionResponseDTO;
-import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
-import com.backend.bilanko.services.object.product.CategoryServices;
+import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
+import com.backend.bilanko.services.concept.category.ProductCategoryServices;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class AIProductMapper {
 
-    private final CategoryServices categoryServices;
+    private final ProductCategoryServices categoryServices;
 
     public ProductDescriptionClean cleanAiImageJsonReponse(ProductRecognitionResponseDTO dto) {
         if (dto == null) {

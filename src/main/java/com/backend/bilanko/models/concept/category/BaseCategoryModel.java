@@ -3,7 +3,6 @@ package com.backend.bilanko.models.concept.category;
 import com.backend.bilanko.models.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,4 @@ import lombok.Setter;
 public abstract class BaseCategoryModel extends BaseEntity {
     @Column(nullable = false)
     String name;
-
-    @Transient
-    CategoryType categoryType;
 }
