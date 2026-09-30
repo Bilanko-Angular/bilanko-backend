@@ -3,6 +3,7 @@ package com.backend.bilanko.controller.concept.category;
 import com.backend.bilanko.DTO.concept.category.CategoryDTO;
 import com.backend.bilanko.DTO.concept.category.CategorySearch;
 import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
+import com.backend.bilanko.DTO.shared.PageResponse;
 import com.backend.bilanko.mapper.CategoryMapper;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.concept.category.BaseCategoryModel;
@@ -64,10 +65,20 @@ public class CategoryController {
 
     // GET /api/categories/search?name=...  →  public (pas besoin d'être admin)
     @GetMapping(CategoryApiRoutes.search_by_name)
-    public ResponseEntity<List<CategorySearch>> searchByName(
+    public ResponseEntity<PageResponse<CategorySearch>> searchByName(
             @RequestParam String name,
-            @RequestParam(required = false) CategoryType categoryType) {
-        return ResponseEntity.ok(multiCategoryService.search(name, categoryType));
+            @RequestParam(required = false) CategoryType categoryType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(multiCategoryService.search(name, categoryType, page, size));
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<CategorySearch>> findAll(
+            @RequestParam(required = false) CategoryType categoryType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(multiCategoryService.findAll(categoryType, page, size));
     }
 
     // ── UPDATE ─────────────────────────────────────────────────────────────

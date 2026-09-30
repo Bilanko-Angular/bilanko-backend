@@ -3,6 +3,8 @@ package com.backend.bilanko.repository.concept.category;
 import com.backend.bilanko.DTO.concept.category.CategorySearch;
 import com.backend.bilanko.DTO.concept.category.CategorySearchView;
 import com.backend.bilanko.models.concept.category.ProductCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -27,18 +29,27 @@ public interface MultiCategoryRepository extends Repository<ProductCategory, Lon
        UNION ALL
 
        SELECT c.id, c.name, 'CHARGE' AS type,
-              (SELECT count(*)
-               FROM charge ch
+              (SELECT count(*) FROM charge ch
                WHERE ch.charge_category_id = c.id) AS "usageCount",
-              (SELECT count(DISTINCT ch.user_id)
-               FROM charge ch
+              (SELECT count(DISTINCT ch.user_id) FROM charge ch
                WHERE ch.charge_category_id = c.id) AS "userCount"
        FROM charge_category c
        WHERE (CAST(:type AS text) IS NULL OR CAST(:type AS text) = 'CHARGE')
          AND lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%')))
 
-       ORDER BY name
-       """, nativeQuery = true)
-    List<CategorySearchView> searchAll(@Param("keyword") String keyword,
-                                       @Param("type") String type);
+       ORDER BY name, type, id
+       """,
+            countQuery = """
+       SELECT
+         (SELECT count(*) FROM category c
+          WHERE (CAST(:type AS text) IS NULL OR CAST(:type AS text) = 'PRODUCT')
+            AND lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%'))))
+       + (SELECT count(*) FROM charge_category c
+          WHERE (CAST(:type AS text) IS NULL OR CAST(:type AS text) = 'CHARGE')
+            AND lower(unaccent(c.name)) LIKE lower(unaccent(concat('%', :keyword, '%'))))
+       """,
+            nativeQuery = true)
+    Page<CategorySearchView> searchAll(@Param("keyword") String keyword,
+                                       @Param("type") String type,
+                                       Pageable pageable);
 }
