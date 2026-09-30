@@ -10,7 +10,7 @@ import com.backend.bilanko.models.concept.category.BaseCategoryModel;
 import com.backend.bilanko.models.concept.category.CategoryType;
 import com.backend.bilanko.services.concept.category.CategoryService;
 import com.backend.bilanko.services.concept.category.MultiCategoryService;
-import com.backend.bilanko.utils.routes.category.CategoryApiRoutes;
+import com.backend.bilanko.utils.routes.CategoryApiRoutes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

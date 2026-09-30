@@ -1,4 +1,4 @@
-package com.backend.bilanko.utils.routes.category;
+package com.backend.bilanko.utils.routes;
 
 
 public final class CategoryApiRoutes {
