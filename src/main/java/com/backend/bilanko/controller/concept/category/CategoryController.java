@@ -31,7 +31,9 @@ public class CategoryController {
                 .collect(Collectors.toMap(
                         CategoryService::type,
                         Function.identity(),
-                        (a, b) -> { throw new IllegalStateException("Deux services pour " + a.type()); },
+                        (a, b) -> { throw new IllegalStateException(
+                                "Deux services pour " + a.type() + " : "
+                                        + a.getClass().getName() + " et " + b.getClass().getName()); },
                         () -> new EnumMap<>(CategoryType.class)));
         this.multiCategoryService = multiCategoryService;
     }

@@ -17,7 +17,7 @@ public class ChargeCategoryService implements CategoryService{
     private final ChargeCategoryRepository chargeCategoryRepository;
     @Override
     public CategoryType type() {
-        return CategoryType.PRODUCT;
+        return CategoryType.CHARGE;
     }
 
 

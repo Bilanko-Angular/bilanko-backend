@@ -7,6 +7,7 @@ import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.user.User;
+import com.backend.bilanko.repository.concept.category.ChargeCategoryRepository;
 import com.backend.bilanko.repository.transaction.ChargeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import java.util.List;
 public class ChargeService {
 
     private final ChargeRepository chargeRepository;
-    private final com.backend.bilanko.repository.transaction.ChargeCategoryRepository chargeCategoryRepository;
+    private final ChargeCategoryRepository chargeCategoryRepository;
     private final NotificationService notificationService;
 
     @Transactional
