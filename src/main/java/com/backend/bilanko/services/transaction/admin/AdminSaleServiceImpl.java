@@ -5,22 +5,21 @@ import com.backend.bilanko.DTO.transaction.admin.AdminSaleResponseDTO;
 import com.backend.bilanko.DTO.transaction.admin.AdminSaleSummaryDTO;
 import com.backend.bilanko.DTO.transaction.admin.AdminSaleUpdateRequest;
 import com.backend.bilanko.DTO.transaction.sale.SaleItemRequestDTO;
-import com.backend.bilanko.DTO.transaction.sale.SaleItemResponseDTO;
+import com.backend.bilanko.mapper.SaleMapper;
 import com.backend.bilanko.models.object.product.Product;
-import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Sale;
 import com.backend.bilanko.models.transaction.SaleItem;
 import com.backend.bilanko.repository.object.product.ProductRepository;
 import com.backend.bilanko.repository.person.UserRepository;
 import com.backend.bilanko.repository.transaction.SaleRepository;
+import com.backend.bilanko.utils.annotation.AdminOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,42 +38,6 @@ public class AdminSaleServiceImpl implements AdminSaleService {
     private final ProductRepository productRepository;
 
     // ---- Helpers ----
-
-    private void verifyAdmin(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Administrateur introuvable"));
-        if (user.getRole() != Role.ADMIN) {
-            throw new AccessDeniedException("Accès refusé. Vous n'êtes pas administrateur.");
-        }
-    }
-
-    private AdminSaleResponseDTO mapToDTO(Sale sale) {
-        List<SaleItemResponseDTO> items = sale.getItems().stream()
-                .map(item -> new SaleItemResponseDTO(
-                        item.getId(),
-                        item.getProduct().getId(),
-                        item.getProduct().getName(),
-                        item.getQuantity(),
-                        item.getUnitSellingPrice(),
-                        item.getUnitPurchasePrice(),
-                        item.getMargin()
-                ))
-                .toList();
-
-        return AdminSaleResponseDTO.builder()
-                .id(sale.getId())
-                .saleDate(sale.getSaleDate())
-                .customerName(sale.getCustomerName())
-                .totalAmount(sale.getTotalAmount())
-                .totalMargin(sale.getTotalMargin())
-                .itemCount(sale.getItems().size())
-                .items(items)
-                .userId(sale.getUser().getId())
-                .userName(sale.getUser().getName())
-                .userSubname(sale.getUser().getSubname())
-                .build();
-    }
-
     private void restoreStock(Sale sale) {
         for (SaleItem item : sale.getItems()) {
             Product product = item.getProduct();
@@ -141,8 +104,8 @@ public class AdminSaleServiceImpl implements AdminSaleService {
     // ---- Service Methods ----
 
     @Override
-    public AdminSaleSummaryDTO getSummary(String adminEmail) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public AdminSaleSummaryDTO getSummary() {
 
         long totalCount = saleRepository.count();
 
@@ -167,24 +130,24 @@ public class AdminSaleServiceImpl implements AdminSaleService {
     }
 
     @Override
-    public Page<AdminSaleResponseDTO> getPagedSales(String adminEmail, int page, int size) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public Page<AdminSaleResponseDTO> getPagedSales(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saleDate"));
-        return saleRepository.findAll(pageable).map(this::mapToDTO);
+        return saleRepository.findAll(pageable).map(SaleMapper::mapSaleToAdminSaleDTO);
     }
 
     @Override
-    public Page<AdminSaleResponseDTO> searchSales(String adminEmail, String keyword, Integer minItems, Integer maxItems,
+    @AdminOnly
+    public Page<AdminSaleResponseDTO> searchSales(String keyword, Integer minItems, Integer maxItems,
                                                    Double minAmount, Double maxAmount,
                                                    LocalDateTime startDate, LocalDateTime endDate,
                                                    int page, int size) {
-        verifyAdmin(adminEmail);
         Pageable pageable = PageRequest.of(page, size);
         String kw = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
 
         Page<AdminSaleResponseDTO> results = saleRepository.adminSearchSales(
                 kw, minAmount, maxAmount, startDate, endDate, pageable
-        ).map(this::mapToDTO);
+        ).map(SaleMapper::mapSaleToAdminSaleDTO);
 
         // Filtre côté Java pour le nombre d'items (DISTINCT en JPQL rend le count complexe)
         if (minItems != null || maxItems != null) {
@@ -201,8 +164,8 @@ public class AdminSaleServiceImpl implements AdminSaleService {
 
     @Override
     @Transactional
-    public AdminSaleResponseDTO createSale(String adminEmail, AdminSaleCreateRequest request) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public AdminSaleResponseDTO createSale(AdminSaleCreateRequest request) {
 
         User targetUser = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -221,14 +184,13 @@ public class AdminSaleServiceImpl implements AdminSaleService {
         applyItems(sale, request.getItems(), targetUser);
 
         Sale saved = saleRepository.save(sale);
-        return mapToDTO(saved);
+        return SaleMapper.mapSaleToAdminSaleDTO(saved);
     }
 
     @Override
     @Transactional
-    public AdminSaleResponseDTO updateSale(String adminEmail, Long saleId, AdminSaleUpdateRequest request) {
-        verifyAdmin(adminEmail);
-
+    @AdminOnly
+    public AdminSaleResponseDTO updateSale(Long saleId, AdminSaleUpdateRequest request) {
         Sale sale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Vente introuvable : id=" + saleId));
@@ -242,13 +204,13 @@ public class AdminSaleServiceImpl implements AdminSaleService {
         applyItems(sale, request.getItems(), sale.getUser());
 
         Sale saved = saleRepository.save(sale);
-        return mapToDTO(saved);
+        return SaleMapper.mapSaleToAdminSaleDTO(saved);
     }
 
     @Override
     @Transactional
-    public void deleteSale(String adminEmail, Long saleId) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public void deleteSale(Long saleId) {
 
         Sale sale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
