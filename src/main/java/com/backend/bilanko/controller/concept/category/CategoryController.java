@@ -10,7 +10,7 @@ import com.backend.bilanko.models.concept.category.BaseCategoryModel;
 import com.backend.bilanko.models.concept.category.CategoryType;
 import com.backend.bilanko.services.concept.category.CategoryService;
 import com.backend.bilanko.services.concept.category.MultiCategoryService;
-import com.backend.bilanko.utils.routes.CategoryApiRoutes;
+import com.backend.bilanko.utils.routes.category.CategoryApiRoutes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,16 +60,6 @@ public class CategoryController {
                 .toList();
 
         return ResponseEntity.ok(result);
-    }
-
-    // GET /api/categories/search?name=...  →  public (pas besoin d'être admin)
-    @GetMapping(CategoryApiRoutes.search_by_name)
-    public ResponseEntity<PageResponse<CategorySearch>> searchByName(
-            @RequestParam String name,
-            @RequestParam(required = false) CategoryType categoryType,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(multiCategoryService.search(name, categoryType, page, size));
     }
 
     @GetMapping
