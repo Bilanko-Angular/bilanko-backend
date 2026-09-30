@@ -4,6 +4,7 @@ import com.backend.bilanko.DTO.concept.category.CategoryDTO;
 import com.backend.bilanko.DTO.concept.category.CategorySearch;
 import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
 import com.backend.bilanko.DTO.shared.PageResponse;
+import com.backend.bilanko.DTO.summary.category.CategorySummaryDTO;
 import com.backend.bilanko.mapper.CategoryMapper;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.concept.category.BaseCategoryModel;
@@ -69,7 +70,7 @@ public class CategoryController {
             @RequestParam String name,
             @RequestParam(required = false) CategoryType categoryType,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(multiCategoryService.search(name, categoryType, page, size));
     }
 
@@ -77,8 +78,15 @@ public class CategoryController {
     public ResponseEntity<PageResponse<CategorySearch>> findAll(
             @RequestParam(required = false) CategoryType categoryType,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(multiCategoryService.findAll(categoryType, page, size));
+    }
+
+    //Obtenir un résumé des catégorie
+    // GET /api/summary
+    @GetMapping(CategoryApiRoutes.summary)
+    public ResponseEntity<CategorySummaryDTO> getSummary(){
+        return ResponseEntity.ok(multiCategoryService.summary());
     }
 
     // ── UPDATE ─────────────────────────────────────────────────────────────

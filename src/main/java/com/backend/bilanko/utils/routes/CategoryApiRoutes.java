@@ -10,4 +10,5 @@ public final class CategoryApiRoutes {
     public static final String search_by_name  = "/search";         // GET    /api/categories/search?name=...
     public static final String update_category = "/{id}";           // PUT    /api/categories/{id}
     public static final String delete_category = "/{id}";           // DELETE /api/categories/{id}
+    public static final String summary        = "/summary";
 }

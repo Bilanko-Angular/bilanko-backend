@@ -17,8 +17,8 @@ import java.util.List;
 public class ProductCategory extends BaseCategoryModel {
     @ManyToMany
     @JoinTable(
-            name = "product_category_product",
-            joinColumns = @JoinColumn(name = "product_category_id"),
+            name = "product_categories",
+            joinColumns = @JoinColumn(name = "categories_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
