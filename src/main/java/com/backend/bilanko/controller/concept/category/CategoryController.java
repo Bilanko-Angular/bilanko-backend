@@ -6,17 +6,13 @@ import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
 import com.backend.bilanko.DTO.shared.PageResponse;
 import com.backend.bilanko.DTO.summary.category.CategorySummaryDTO;
 import com.backend.bilanko.mapper.CategoryMapper;
-import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.concept.category.BaseCategoryModel;
 import com.backend.bilanko.models.concept.category.CategoryType;
-import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.services.concept.category.CategoryService;
 import com.backend.bilanko.services.concept.category.MultiCategoryService;
 import com.backend.bilanko.utils.routes.CategoryApiRoutes;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.EnumMap;
@@ -82,7 +78,7 @@ public class CategoryController {
         return ResponseEntity.ok(multiCategoryService.findAll(categoryType, page, size));
     }
 
-    //Obtenir un résumé des catégorie
+    //Obtenir un résumé des catégories
     // GET /api/summary
     @GetMapping(CategoryApiRoutes.summary)
     public ResponseEntity<CategorySummaryDTO> getSummary(){

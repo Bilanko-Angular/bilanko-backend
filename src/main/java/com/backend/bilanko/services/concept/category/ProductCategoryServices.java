@@ -1,6 +1,7 @@
 package com.backend.bilanko.services.concept.category;
 
 
+import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
 import com.backend.bilanko.models.concept.category.BaseCategoryModel;
 import com.backend.bilanko.models.concept.category.CategoryType;
 import com.backend.bilanko.models.concept.category.ProductCategory;
@@ -56,4 +57,29 @@ public class ProductCategoryServices implements CategoryService{
     public void delete(long id) {
         productCategoryRepository.deleteById(id);
     }
+
+    public List<CleanCategoryDTO> searchByName(String name) {
+        return productCategoryRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(cat -> CleanCategoryDTO.builder()
+                        .id(cat.getId())
+                        .name(cat.getName())
+                        .categoryType(CategoryType.PRODUCT)
+                        .createAt(cat.getCreatedAt())
+                        .build())
+                .toList();
+    }
+
+    public List<CleanCategoryDTO> getCategoriesByNames(List<String> names) {
+        return productCategoryRepository.findByNameIn(names)
+                .stream()
+                .map(cat -> CleanCategoryDTO.builder()
+                        .id(cat.getId())
+                        .name(cat.getName())
+                        .categoryType(CategoryType.PRODUCT)
+                        .createAt(cat.getCreatedAt())
+                        .build())
+                .toList();
+    }
+
 }

@@ -8,6 +8,9 @@ import java.util.List;
 
 
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory,Long> {
+    List<ProductCategory> findByNameContainingIgnoreCase(String name);
+    List<ProductCategory> findByNameIn(List<String> names);
+
     @Query("""
         SELECT count(DISTINCT u.id) AS total
         FROM product_categories pcp

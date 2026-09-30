@@ -11,4 +11,5 @@ public record CleanCategoryDTO(
         String name,
         CategoryType categoryType,
         Instant createAt
-) {}
+) {
+}
