@@ -20,6 +20,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     long countByCreatedAtGreaterThanEqual(Instant start);
 
+    long countByCreatedAtBetween(Instant from, Instant to);
+
+    @Query("""
+            SELECT p FROM Product p
+            WHERE p.quantity = 0
+               OR (p.alertThreshold IS NOT NULL AND p.quantity <= p.alertThreshold)
+            ORDER BY p.quantity ASC, p.name ASC
+            """)
+    List<Product> findStockAlerts(Pageable pageable);
+
     @Query("SELECT COUNT(DISTINCT si.product.id) FROM SaleItem si")
     long countAssociatedWithSale();
 

@@ -3,6 +3,7 @@ package com.backend.bilanko.repository.transaction;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +28,16 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
 
     @Query("SELECT AVG(c.amount) FROM Charge c")
     Double averageChargeAmount();
+
+    List<Charge> findByDateBetween(LocalDate from, LocalDate to);
+
+    @Query("""
+            SELECT c.supplier, SUM(c.amount), COUNT(c)
+            FROM Charge c
+            GROUP BY c.supplier
+            ORDER BY SUM(c.amount) DESC
+            """)
+    List<Object[]> findSupplierShares(Pageable pageable);
 
     @Query("SELECT c FROM Charge c WHERE " +
             "(:keyword IS NULL OR LOWER(c.label) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

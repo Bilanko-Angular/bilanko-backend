@@ -20,6 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     long countByActive(boolean active);
     long countByCreatedAtAfter(Instant date);
+    long countByCreatedAtBetween(Instant from, Instant to);
+
+    List<User> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE " +
             "(:keyword IS NULL OR " +
