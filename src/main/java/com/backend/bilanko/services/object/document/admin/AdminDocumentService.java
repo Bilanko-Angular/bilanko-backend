@@ -8,18 +8,18 @@ import org.springframework.data.domain.Page;
 
 public interface AdminDocumentService {
 
-    AdminDocumentSummaryDTO getSummary(String adminEmail);
+    AdminDocumentSummaryDTO getSummary();
 
-    Page<AdminDocumentResponseDTO> getPagedDocuments(String adminEmail, int page, int size);
+    Page<AdminDocumentResponseDTO> getPagedDocuments(int page, int size);
 
     Page<AdminDocumentResponseDTO> searchDocuments(
-            String adminEmail, String keyword, String type, int page, int size);
+             String keyword, String type, int page, int size);
 
-    AdminDocumentResponseDTO getById(String adminEmail, Long documentId);
+    AdminDocumentResponseDTO getById(Long documentId);
 
-    AdminDocumentResponseDTO createDocument(String adminEmail, AdminDocumentCreateRequest request);
+    AdminDocumentResponseDTO createDocument(AdminDocumentCreateRequest request);
 
-    AdminDocumentResponseDTO updateDocument(String adminEmail, Long documentId, AdminDocumentUpdateRequest request);
+    AdminDocumentResponseDTO updateDocument(Long documentId, AdminDocumentUpdateRequest request);
 
-    void deleteDocument(String adminEmail, Long documentId);
+    void deleteDocument(Long documentId);
 }

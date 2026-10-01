@@ -4,12 +4,14 @@ import com.backend.bilanko.DTO.object.document.admin.AdminDocumentCreateRequest;
 import com.backend.bilanko.DTO.object.document.admin.AdminDocumentResponseDTO;
 import com.backend.bilanko.DTO.object.document.admin.AdminDocumentSummaryDTO;
 import com.backend.bilanko.DTO.object.document.admin.AdminDocumentUpdateRequest;
+import com.backend.bilanko.mapper.DocumentMapper;
 import com.backend.bilanko.models.object.document.*;
 import com.backend.bilanko.models.person.user.Role;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.object.document.DocumentRepository;
 import com.backend.bilanko.repository.object.document.InfoCleRepository;
 import com.backend.bilanko.repository.person.UserRepository;
+import com.backend.bilanko.utils.annotation.AdminOnly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,61 +32,6 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
     private final DocumentRepository documentRepository;
     private final InfoCleRepository infoCleRepository;
     private final UserRepository userRepository;
-
-    private void verifyAdmin(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Administrateur introuvable"));
-        if (user.getRole() != Role.ADMIN) {
-            throw new AccessDeniedException("Accès refusé. Vous n'êtes pas administrateur.");
-        }
-    }
-
-    private AdminDocumentResponseDTO mapToDTO(Document document) {
-        AdminDocumentResponseDTO.AdminDocumentResponseDTOBuilder builder = AdminDocumentResponseDTO.builder()
-                .id(document.getId())
-                .nom(document.getNom())
-                .type(document.getType())
-                .frontCode(document.getType().getFrontCode())
-                .objet(document.getObjet())
-                .dateDeGeneration(document.getDateDeGeneration())
-                .userId(document.getUser().getId())
-                .userName(document.getUser().getName())
-                .userSubname(document.getUser().getSubname());
-
-        if (document instanceof AdministrativeDocument admin) {
-            builder.raisonSociale(admin.getRaisonSociale());
-        }
-
-        if (document instanceof DocumentPret pret) {
-            builder.pret(AdminDocumentResponseDTO.PretDetails.builder()
-                    .capitalPropre(pret.getCapitalPropre())
-                    .banque(pret.getBanque())
-                    .agence(pret.getAgence())
-                    .montantDemande(pret.getMontantDemande())
-                    .dureeMois(pret.getDureeMois())
-                    .garanties(pret.getGaranties())
-                    .build());
-        }
-
-        if (document instanceof DocumentFiscaux fiscal) {
-            builder.fiscal(AdminDocumentResponseDTO.FiscalDetails.builder()
-                    .regimeFiscal(fiscal.getRegimeFiscal())
-                    .regimeFiscalFrontCode(fiscal.getRegimeFiscal().getFrontCode())
-                    .exerciceFiscal(fiscal.getExerciceFiscal())
-                    .centreImpots(fiscal.getCentreImpots())
-                    .natureImpot(fiscal.getNatureImpot())
-                    .debutPeriodeDeclaration(fiscal.getDebutPeriodeDeclaration())
-                    .finPeriodeDeclaration(fiscal.getFinPeriodeDeclaration())
-                    .montantImpot(fiscal.getMontantImpot())
-                    .datePaiement(fiscal.getDatePaiement())
-                    .moyenPaiement(fiscal.getMoyenPaiement())
-                    .referencePaiement(fiscal.getReferencePaiement())
-                    .chiffreAffairesPeriode(fiscal.getChiffreAffairesPeriode())
-                    .build());
-        }
-
-        return builder.build();
-    }
 
     private TypeDocument resolveType(String raw) {
         if (raw == null || raw.isBlank()) {
@@ -122,8 +69,8 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public AdminDocumentSummaryDTO getSummary(String adminEmail) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public AdminDocumentSummaryDTO getSummary() {
 
         return AdminDocumentSummaryDTO.builder()
                 .totalCount(documentRepository.count())
@@ -135,38 +82,40 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AdminDocumentResponseDTO> getPagedDocuments(String adminEmail, int page, int size) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public Page<AdminDocumentResponseDTO> getPagedDocuments(int page, int size) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateDeGeneration"));
-        return documentRepository.findAll(pageable).map(this::mapToDTO);
+        return documentRepository.findAll(pageable).map(DocumentMapper::mapDocumentToAdminDocumentDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @AdminOnly
     public Page<AdminDocumentResponseDTO> searchDocuments(
-            String adminEmail, String keyword, String type, int page, int size) {
-        verifyAdmin(adminEmail);
+            String keyword, String type, int page, int size) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateDeGeneration"));
         String kw = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
         TypeDocument typeFilter = (type != null && !type.isBlank()) ? resolveType(type) : null;
-        return documentRepository.adminSearchDocuments(kw, typeFilter, pageable).map(this::mapToDTO);
+        return documentRepository.adminSearchDocuments(kw, typeFilter, pageable).map(DocumentMapper::mapDocumentToAdminDocumentDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AdminDocumentResponseDTO getById(String adminEmail, Long documentId) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public AdminDocumentResponseDTO getById(Long documentId) {
+
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Document introuvable : id=" + documentId));
-        return mapToDTO(document);
+        return DocumentMapper.mapDocumentToAdminDocumentDTO(document);
     }
 
     @Override
     @Transactional
-    public AdminDocumentResponseDTO createDocument(String adminEmail, AdminDocumentCreateRequest request) {
-        verifyAdmin(adminEmail);
-
+    @AdminOnly
+    public AdminDocumentResponseDTO createDocument(AdminDocumentCreateRequest request) {
         TypeDocument type = resolveType(request.getType());
         if (type != TypeDocument.DOCUMENT_PRET && type != TypeDocument.DOCUMENT_FISCAL) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -194,7 +143,7 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
             saved = documentRepository.save(buildFiscal(targetUser, raison, request.getNom(), request.getFiscal()));
         }
 
-        return mapToDTO(saved);
+        return DocumentMapper.mapDocumentToAdminDocumentDTO(saved);
     }
 
     private DocumentPret buildPret(
@@ -270,9 +219,10 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
 
     @Override
     @Transactional
+    @AdminOnly
     public AdminDocumentResponseDTO updateDocument(
-            String adminEmail, Long documentId, AdminDocumentUpdateRequest request) {
-        verifyAdmin(adminEmail);
+            Long documentId, AdminDocumentUpdateRequest request) {
+
 
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -299,7 +249,7 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
                     "Ce type de document ne peut pas être modifié côté admin.");
         }
 
-        return mapToDTO(documentRepository.save(document));
+        return DocumentMapper.mapDocumentToAdminDocumentDTO(documentRepository.save(document));
     }
 
     private void applyPretUpdate(
@@ -355,8 +305,8 @@ public class AdminDocumentServiceImpl implements AdminDocumentService {
 
     @Override
     @Transactional
-    public void deleteDocument(String adminEmail, Long documentId) {
-        verifyAdmin(adminEmail);
+    @AdminOnly
+    public void deleteDocument(Long documentId) {
 
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

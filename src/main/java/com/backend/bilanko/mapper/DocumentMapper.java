@@ -1,6 +1,7 @@
 package com.backend.bilanko.mapper;
 
 import com.backend.bilanko.DTO.object.document.*;
+import com.backend.bilanko.DTO.object.document.admin.AdminDocumentResponseDTO;
 import com.backend.bilanko.models.object.document.*;
 import com.backend.bilanko.models.person.user.User;
 
@@ -93,7 +94,54 @@ public final class DocumentMapper {
         );
     }
 
+    public static AdminDocumentResponseDTO mapDocumentToAdminDocumentDTO(Document document) {
+        AdminDocumentResponseDTO.AdminDocumentResponseDTOBuilder builder = AdminDocumentResponseDTO.builder()
+                .id(document.getId())
+                .nom(document.getNom())
+                .type(document.getType())
+                .frontCode(document.getType().getFrontCode())
+                .objet(document.getObjet())
+                .dateDeGeneration(document.getDateDeGeneration())
+                .userId(document.getUser().getId())
+                .userName(document.getUser().getName())
+                .userSubname(document.getUser().getSubname());
+
+        if (document instanceof AdministrativeDocument admin) {
+            builder.raisonSociale(admin.getRaisonSociale());
+        }
+
+        if (document instanceof DocumentPret pret) {
+            builder.pret(AdminDocumentResponseDTO.PretDetails.builder()
+                    .capitalPropre(pret.getCapitalPropre())
+                    .banque(pret.getBanque())
+                    .agence(pret.getAgence())
+                    .montantDemande(pret.getMontantDemande())
+                    .dureeMois(pret.getDureeMois())
+                    .garanties(pret.getGaranties())
+                    .build());
+        }
+
+        if (document instanceof DocumentFiscaux fiscal) {
+            builder.fiscal(AdminDocumentResponseDTO.FiscalDetails.builder()
+                    .regimeFiscal(fiscal.getRegimeFiscal())
+                    .regimeFiscalFrontCode(fiscal.getRegimeFiscal().getFrontCode())
+                    .exerciceFiscal(fiscal.getExerciceFiscal())
+                    .centreImpots(fiscal.getCentreImpots())
+                    .natureImpot(fiscal.getNatureImpot())
+                    .debutPeriodeDeclaration(fiscal.getDebutPeriodeDeclaration())
+                    .finPeriodeDeclaration(fiscal.getFinPeriodeDeclaration())
+                    .montantImpot(fiscal.getMontantImpot())
+                    .datePaiement(fiscal.getDatePaiement())
+                    .moyenPaiement(fiscal.getMoyenPaiement())
+                    .referencePaiement(fiscal.getReferencePaiement())
+                    .chiffreAffairesPeriode(fiscal.getChiffreAffairesPeriode())
+                    .build());
+        }
+
+        return builder.build();
+    }
     private static String blankToEmpty(String value) {
         return value == null ? "" : value;
     }
+
 }
