@@ -72,6 +72,23 @@ public class NotificationSseService {
         }
     }
 
+    public void pushDeleted(long userId, long notificationId) {
+        List<SseEmitter> emitters = emittersByUser.get(userId);
+        if (emitters == null || emitters.isEmpty()) {
+            return;
+        }
+
+        for (SseEmitter emitter : List.copyOf(emitters)) {
+            try {
+                emitter.send(SseEmitter.event()
+                        .name("notification-deleted")
+                        .data(Map.of("id", notificationId)));
+            } catch (IOException | IllegalStateException e) {
+                removeEmitter(userId, emitter);
+            }
+        }
+    }
+
     private void removeEmitter(long userId, SseEmitter emitter) {
         List<SseEmitter> emitters = emittersByUser.get(userId);
         if (emitters == null) {

@@ -34,7 +34,11 @@ public class Notification extends BaseEntity {
     @Column(name = "is_read", nullable = false)
     private boolean read = false;
 
-    /** Identifiant optionnel de la ressource liée (vente, charge…). */
+    /** Identifiant optionnel de la ressource liée (vente, charge, conversation…). */
     @Column(name = "reference_id")
     private Long referenceId;
+
+    /** Lien d'action optionnel (ex. prise en main d'une conversation support). */
+    @Column(name = "action_link", length = 500)
+    private String actionLink;
 }
