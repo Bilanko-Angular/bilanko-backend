@@ -74,7 +74,6 @@ public class DashboardServiceImpl implements DashboardService {
 
         Instant currentMonthStart = currentMonth.atDay(1).atStartOfDay(zone).toInstant();
         Instant previousMonthStart = previousMonth.atDay(1).atStartOfDay(zone).toInstant();
-        Instant previousMonthEnd = currentMonthStart;
 
         LocalDateTime currentMonthStartDt = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime currentMonthEndDt = currentMonth.atEndOfMonth().atTime(23, 59, 59);
@@ -83,11 +82,11 @@ public class DashboardServiceImpl implements DashboardService {
 
         long totalUsers = userRepository.count();
         long usersThisMonth = userRepository.countByCreatedAtBetween(currentMonthStart, Instant.now());
-        long usersPreviousMonth = userRepository.countByCreatedAtBetween(previousMonthStart, previousMonthEnd);
+        long usersPreviousMonth = userRepository.countByCreatedAtBetween(previousMonthStart, currentMonthStart);
 
         long totalProducts = productRepository.count();
         long productsThisMonth = productRepository.countByCreatedAtBetween(currentMonthStart, Instant.now());
-        long productsPreviousMonth = productRepository.countByCreatedAtBetween(previousMonthStart, previousMonthEnd);
+        long productsPreviousMonth = productRepository.countByCreatedAtBetween(previousMonthStart, currentMonthStart);
 
         long totalSales = saleRepository.count();
         long salesThisMonth = saleRepository.countBySaleDateBetween(currentMonthStartDt, currentMonthEndDt);
