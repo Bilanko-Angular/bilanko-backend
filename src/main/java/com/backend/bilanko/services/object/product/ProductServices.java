@@ -1,5 +1,6 @@
 package com.backend.bilanko.services.object.product;
 
+import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Product;
@@ -27,8 +28,7 @@ public interface ProductServices {
     // Supprimer un produit (uniquement si le user en est propriétaire)
     void delete(long id, String email);
 
-    Page<Product> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size);
+    Page<ProductApiDTO> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size);
 
     StockOverviewDTO getStockOverview(String email);
 }
-
