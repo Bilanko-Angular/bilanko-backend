@@ -14,7 +14,6 @@ public interface CategoryService {
     @AdminOnly
     BaseCategoryModel create(String name);
 
-    @MerchantOnly
     List<? extends BaseCategoryModel> findAll();
 
     @AdminOnly
