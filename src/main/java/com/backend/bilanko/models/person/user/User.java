@@ -1,5 +1,6 @@
 package com.backend.bilanko.models.person.user;
 
+import com.backend.bilanko.models.BaseEntity;
 import com.backend.bilanko.models.person.notification.NotificationPreferences;
 import com.backend.bilanko.models.person.setting.AppearancePreferences;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-import com.backend.bilanko.models.BaseEntity;
 
 @Entity
 @Data
@@ -44,6 +44,13 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     @Column(name = "token_version", nullable = false)
     private int tokenVersion = 0;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean active = true;
+
+    @Column(name = "last_connection_date")
+    private java.time.Instant lastConnectionDate;
 
     // Pas de "nullable = false" : null par défaut tant que l'utilisateur ne l'a pas renseigné
     @Column(name = "phone_number")

@@ -1,6 +1,7 @@
 package com.backend.bilanko.repository.person;
 
 import com.backend.bilanko.models.person.notification.Notification;
+import com.backend.bilanko.models.person.notification.NotificationType;
 import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -19,7 +21,15 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     long countByUserAndReadFalse(User user);
 
+    List<Notification> findByTypeAndReferenceId(NotificationType type, Long referenceId);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.read = true WHERE n.user = :user AND n.read = false")
     int markAllAsRead(@Param("user") User user);
+
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM Notification n WHERE n.type = :type AND n.referenceId = :referenceId")
+    int deleteByTypeAndReferenceId(
+            @Param("type") NotificationType type,
+            @Param("referenceId") Long referenceId);
 }

@@ -3,9 +3,11 @@ package com.backend.bilanko.services.transaction;
 import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
 import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
+import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.models.transaction.Charge;
 import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.user.User;
+import com.backend.bilanko.repository.concept.category.ChargeCategoryRepository;
 import com.backend.bilanko.repository.transaction.ChargeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +25,23 @@ import java.util.List;
 public class ChargeService {
 
     private final ChargeRepository chargeRepository;
+    private final ChargeCategoryRepository chargeCategoryRepository;
     private final NotificationService notificationService;
 
     @Transactional
     public ChargeResponseDTO createCharge(ChargeRequestDTO dto, User currentUser) {
+        ChargeCategory category = null;
+        if (dto.categoryId() != null) {
+            category = chargeCategoryRepository.findById(dto.categoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));
+        }
+
         Charge charge = Charge.builder()
                 .label(dto.label())
                 .supplier(dto.supplier())
                 .amount(dto.amount())
                 .date(dto.date())
+                .chargeCategory(category)
                 .user(currentUser)
                 .build();
 
@@ -70,11 +80,18 @@ public class ChargeService {
     @Transactional
     public ChargeResponseDTO updateCharge(long id, ChargeRequestDTO dto, User currentUser) {
         Charge charge = findOwnedCharge(id, currentUser);
+        
+        ChargeCategory category = null;
+        if (dto.categoryId() != null) {
+            category = chargeCategoryRepository.findById(dto.categoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Catégorie de charge introuvable"));
+        }
 
         charge.setLabel(dto.label());
         charge.setSupplier(dto.supplier());
         charge.setAmount(dto.amount());
         charge.setDate(dto.date());
+        charge.setChargeCategory(category);
 
         Charge saved = chargeRepository.save(charge);
         return ChargeMapper.toDto(saved);

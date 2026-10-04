@@ -11,6 +11,7 @@ public record NotificationResponseDTO(
         String message,
         boolean read,
         Long referenceId,
+        String actionLink,
         Instant createdAt
 ) {
 }

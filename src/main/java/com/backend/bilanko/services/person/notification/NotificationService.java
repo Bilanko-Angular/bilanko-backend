@@ -30,11 +30,19 @@ public class NotificationService {
 
     @Transactional
     public void createNotification(User user, NotificationType type, String title, String message, Long referenceId) {
-        if (user.getRole() != Role.MERCHANT) {
-            return;
-        }
+        createNotification(user, type, title, message, referenceId, null);
+    }
 
-        if (!isNotificationEnabledForUser(user, type)) {
+    @Transactional
+    public void createNotification(
+            User user,
+            NotificationType type,
+            String title,
+            String message,
+            Long referenceId,
+            String actionLink) {
+
+        if (!canReceive(user, type)) {
             return;
         }
 
@@ -44,16 +52,38 @@ public class NotificationService {
                 .title(title)
                 .message(message)
                 .referenceId(referenceId)
+                .actionLink(actionLink)
                 .read(false)
                 .build();
 
         notification = notificationRepository.save(notification);
 
         long unreadCount = notificationRepository.countByUserAndReadFalse(user);
-        
+
         NotificationResponseDTO dto = NotificationMapper.toDto(notification);
         notificationSseService.push(user.getId(), dto);
         notificationSseService.pushUnreadCount(user.getId(), unreadCount);
+    }
+
+    /**
+     * Supprime les notifications d'un type lié à une ressource, et notifie les clients SSE.
+     */
+    @Transactional
+    public void deleteByTypeAndReferenceId(NotificationType type, Long referenceId) {
+        List<Notification> notifications = notificationRepository.findByTypeAndReferenceId(type, referenceId);
+        if (notifications.isEmpty()) {
+            return;
+        }
+
+        for (Notification notification : notifications) {
+            User recipient = notification.getUser();
+            long userId = recipient.getId();
+            long notificationId = notification.getId();
+            notificationRepository.delete(notification);
+            notificationSseService.pushDeleted(userId, notificationId);
+            long unreadCount = notificationRepository.countByUserAndReadFalse(recipient);
+            notificationSseService.pushUnreadCount(userId, unreadCount);
+        }
     }
 
     public void broadcastAppUpdate(String title, String message) {
@@ -61,6 +91,26 @@ public class NotificationService {
         for (User merchant : merchants) {
             createNotification(merchant, NotificationType.APP_UPDATE, title, message, null);
         }
+    }
+
+    private boolean canReceive(User user, NotificationType type) {
+        if (isSupportType(type)) {
+            return user.getRole() == Role.MERCHANT || user.getRole() == Role.ADMIN;
+        }
+        // Types métier classiques : MERCHANT uniquement, selon préférences
+        if (user.getRole() != Role.MERCHANT) {
+            return false;
+        }
+        return isNotificationEnabledForUser(user, type);
+    }
+
+    private boolean isSupportType(NotificationType type) {
+        return switch (type) {
+            case SUPPORT_CLAIM_REQUEST, SUPPORT_TRANSFER_REQUEST,
+                 SUPPORT_CONVERSATION_READY, SUPPORT_ADMIN_CHANGED,
+                 SUPPORT_NEW_MESSAGE -> true;
+            default -> false;
+        };
     }
 
     private boolean isNotificationEnabledForUser(User user, NotificationType type) {
@@ -73,7 +123,10 @@ public class NotificationService {
             case NEW_SALE -> prefs.isNewSales();
             case MONTHLY_REPORT -> prefs.isMonthlyReports();
             case APP_UPDATE -> prefs.isUpdates();
-            case WELCOME, NEW_CHARGE -> true; // Toujours valide
+            case WELCOME, NEW_CHARGE,
+                 SUPPORT_CLAIM_REQUEST, SUPPORT_TRANSFER_REQUEST,
+                 SUPPORT_CONVERSATION_READY, SUPPORT_ADMIN_CHANGED,
+                 SUPPORT_NEW_MESSAGE -> true;
         };
     }
 
@@ -106,7 +159,7 @@ public class NotificationService {
                     if (!notification.isRead()) {
                         notification.setRead(true);
                         notificationRepository.save(notification);
-                        
+
                         long unreadCount = notificationRepository.countByUserAndReadFalse(user);
                         notificationSseService.pushUnreadCount(user.getId(), unreadCount);
                     }
@@ -120,7 +173,7 @@ public class NotificationService {
             notificationSseService.pushUnreadCount(user.getId(), 0);
         }
     }
-    
+
     @Transactional(readOnly = true)
     public long getUnreadCount(User user) {
         return notificationRepository.countByUserAndReadFalse(user);

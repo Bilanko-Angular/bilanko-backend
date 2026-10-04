@@ -14,6 +14,8 @@ public record ChargeRequestDTO(
         @Min(0)
         double amount,
         @NotNull
-        LocalDate date
+        LocalDate date,
+        
+        Long categoryId
 ) {
 }

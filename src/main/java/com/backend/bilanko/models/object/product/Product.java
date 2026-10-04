@@ -1,4 +1,5 @@
 package com.backend.bilanko.models.object.product;
+import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -26,7 +27,7 @@ public class Product extends BaseEntity {
     @Min(0)
     private double purchasePrice;
     @ManyToMany
-    private List<Category> categories;
+    private List<ProductCategory> categories;
     @ManyToOne
     @JsonIgnore
     private User user;

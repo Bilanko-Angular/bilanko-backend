@@ -1,6 +1,6 @@
 package com.backend.bilanko.DTO.ai;
 
-import com.backend.bilanko.DTO.object.product.CleanCategoryDTO;
+import com.backend.bilanko.DTO.concept.category.CleanCategoryDTO;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 

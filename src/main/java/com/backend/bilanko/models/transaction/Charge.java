@@ -1,5 +1,6 @@
 package com.backend.bilanko.models.transaction;
 
+import com.backend.bilanko.models.concept.category.ChargeCategory;
 import com.backend.bilanko.models.person.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,4 +31,8 @@ public class Charge extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "charge_category_id", nullable = false)
+    private ChargeCategory chargeCategory;
 }
