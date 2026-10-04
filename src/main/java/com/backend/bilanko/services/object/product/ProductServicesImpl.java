@@ -1,10 +1,12 @@
 package com.backend.bilanko.services.object.product;
 
+import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.User;
+import com.backend.bilanko.mapper.ProductMapper;
 import com.backend.bilanko.repository.concept.category.ProductCategoryRepository;
 import com.backend.bilanko.repository.object.product.ProductRepository;
 import com.backend.bilanko.services.person.user.UserServices;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -109,7 +112,8 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     @Override
-    public Page<Product> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size) {
+    @Transactional(readOnly = true)
+    public Page<ProductApiDTO> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size) {
         userServices.findUserByEmail(email); // vérifie l'existence
 
         Specification<Product> spec = ProductSpecification.combine(
@@ -120,7 +124,7 @@ public class ProductServicesImpl implements ProductServices {
         );
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        return repo.findAll(spec, pageable);
+        return repo.findAll(spec, pageable).map(ProductMapper::mapProductToProductApiDTO);
     }
 
     @Override
@@ -183,5 +187,4 @@ public class ProductServicesImpl implements ProductServices {
     }
 
 }
-
 

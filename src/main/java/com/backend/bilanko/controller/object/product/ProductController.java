@@ -1,5 +1,6 @@
 package com.backend.bilanko.controller.object.product;
 
+import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
 import com.backend.bilanko.models.object.product.Product;
@@ -88,7 +89,7 @@ public class ProductController {
     }
     // GET /api/products/search?search=&categoryId=&stockStatus=&page=0&size=10
     @GetMapping(ProductApiRoutes.PRODUCTS_SEARCH)
-    public ResponseEntity<Page<Product>> search(
+    public ResponseEntity<Page<ProductApiDTO>> search(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String stockStatus,
@@ -97,8 +98,7 @@ public class ProductController {
             Authentication authentication) {
 
         String email = authentication.getName();
-        Page<Product> result = productServices.searchMyProducts(email, search, categoryId, stockStatus, page, size);
+        Page<ProductApiDTO> result = productServices.searchMyProducts(email, search, categoryId, stockStatus, page, size);
         return ResponseEntity.ok(result);
     }
 }
-
