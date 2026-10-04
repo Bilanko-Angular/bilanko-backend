@@ -10,6 +10,7 @@ import com.backend.bilanko.models.concept.category.BaseCategoryModel;
 import com.backend.bilanko.models.concept.category.CategoryType;
 import com.backend.bilanko.services.concept.category.CategoryService;
 import com.backend.bilanko.services.concept.category.MultiCategoryService;
+import com.backend.bilanko.services.concept.category.ProductCategoryServices;
 import com.backend.bilanko.utils.routes.CategoryApiRoutes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(CategoryApiRoutes.category)
 public class CategoryController {
+    private final ProductCategoryServices productCategoryServices;
     private final Map<CategoryType, CategoryService> categoryServices;
     private final MultiCategoryService multiCategoryService;
-    public CategoryController(List<CategoryService> categoryServices, MultiCategoryService multiCategoryService) {
+    public CategoryController(ProductCategoryServices productCategoryServices, List<CategoryService> categoryServices, MultiCategoryService multiCategoryService) {
+        this.productCategoryServices = productCategoryServices;
         this.categoryServices= categoryServices.stream()
                 .collect(Collectors.toMap(
                         CategoryService::type,
@@ -94,6 +97,12 @@ public class CategoryController {
         CategoryService categoryService=categoryServices.get(categoryDTO.categoryType());
         categoryService.delete(categoryDTO.id());
         return ResponseEntity.noContent().build();  // 204 No Content
+    }
+
+    // Route spéciale ouverte à tout
+    @GetMapping("/search")
+    public ResponseEntity<List<CleanCategoryDTO>> findCategoriesProductByName(@RequestParam String name) {
+        return  ResponseEntity.ok(productCategoryServices.findCategoriesProductByName(name));
     }
 }
 

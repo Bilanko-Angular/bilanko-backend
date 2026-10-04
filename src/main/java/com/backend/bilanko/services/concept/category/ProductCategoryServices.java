@@ -82,4 +82,16 @@ public class ProductCategoryServices implements CategoryService{
                 .toList();
     }
 
+    public List<CleanCategoryDTO> findCategoriesProductByName(String name) {
+        return productCategoryRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(cat -> CleanCategoryDTO.builder()
+                        .id(cat.getId())
+                        .name(cat.getName())
+                        .categoryType(CategoryType.PRODUCT)
+                        .createAt(cat.getCreatedAt())
+                        .build())
+                .toList();
+    }
+
 }
