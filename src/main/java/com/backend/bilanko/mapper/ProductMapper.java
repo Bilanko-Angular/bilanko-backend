@@ -1,5 +1,6 @@
 package com.backend.bilanko.mapper;
 
+import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.admin.AdminProductResponseDTO;
 import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.models.object.product.Product;
@@ -11,6 +12,7 @@ public final class ProductMapper {
 
     private ProductMapper() {
     }
+
 
     public static ProductApiDTO mapProductToProductApiDTO(Product product) {
         List<ProductApiDTO.CategoryDTO> categories = product.getCategories() == null

@@ -1,10 +1,12 @@
 package com.backend.bilanko.DTO.object.product;
 
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 
 import java.util.List;
 import java.util.Optional;
 
+@Builder
 public record ProductDTO(
         String name,
         @PositiveOrZero

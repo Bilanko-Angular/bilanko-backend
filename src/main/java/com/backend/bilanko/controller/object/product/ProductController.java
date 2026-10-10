@@ -3,6 +3,7 @@ package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
+import com.backend.bilanko.mapper.ProductMapper;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
 import com.backend.bilanko.utils.routes.ProductApiRoutes;
@@ -45,9 +46,11 @@ public class ProductController {
 
     // GET /api/products/my  →  uniquement les produits du user connecté
     @GetMapping(ProductApiRoutes.PRODUCTS_MY)
-    public ResponseEntity<List<Product>> findMyProducts(Authentication authentication) {
+    public ResponseEntity<List<ProductApiDTO>> findMyProducts(Authentication authentication) {
         String email = authentication.getName();
-        return ResponseEntity.ok(productServices.findMyProducts(email));
+        return ResponseEntity.ok(productServices.findMyProducts(email).stream()
+                .map(ProductMapper :: mapProductToProductApiDTO )
+                .toList());
     }
 
     // GET /api/products/stock-overview  →  indicateurs stock pour le dashboard
@@ -57,7 +60,7 @@ public class ProductController {
         return ResponseEntity.ok(productServices.getStockOverview(email));
     }
 
-    // GET /api/products/{id}  →  un produit précis par ID
+    // GET /api/products/{id} →  un produit précis par ID
     @GetMapping(ProductApiRoutes.PRODUCTS_BY_ID)
     public ResponseEntity<Product> findById(@PathVariable long id) {
         return ResponseEntity.ok(productServices.findById(id));
