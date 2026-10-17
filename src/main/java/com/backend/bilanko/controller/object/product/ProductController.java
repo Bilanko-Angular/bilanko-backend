@@ -66,6 +66,12 @@ public class ProductController {
         return ResponseEntity.ok(productServices.findById(id));
     }
 
+    // GET /api/products/ref/{ref}  →  un produit précis par reference
+    @GetMapping(ProductApiRoutes.PRODUCT_BY_REF)
+    public ResponseEntity<ProductApiDTO>findByRef(@PathVariable String ref){
+        return ResponseEntity.ok(ProductMapper.mapProductToProductApiDTO(productServices.findByRef(ref)));
+    }
+
     // ── UPDATE ─────────────────────────────────────────────────────────────
     // PUT /api/products/{id}  →  seul le propriétaire peut modifier
     @PutMapping(ProductApiRoutes.PRODUCTS_UPDATE)

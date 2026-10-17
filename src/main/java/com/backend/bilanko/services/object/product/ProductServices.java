@@ -22,6 +22,9 @@ public interface ProductServices {
     // Un produit par son ID
     Product findById(long id);
 
+    // Un produit par sa reference
+    Product findByRef(String ref);
+
     // Mettre à jour un produit (uniquement si le user en est propriétaire)
     Product update(long id, ProductDTO productDTO, String email);
 
