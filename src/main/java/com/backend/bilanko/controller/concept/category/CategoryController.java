@@ -91,6 +91,7 @@ public class CategoryController {
         return ResponseEntity.ok(CategoryMapper.fromBaseCategoryToCleanCategoryDTO(categoryModel,categoryDTO.categoryType()));
     }
 
+
     // ── DELETE ─────────────────────────────────────────────────────────────
     @DeleteMapping(CategoryApiRoutes.delete_category)
     public ResponseEntity<Void> delete(@RequestBody CategoryDTO categoryDTO) {
