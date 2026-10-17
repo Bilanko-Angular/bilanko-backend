@@ -75,6 +75,11 @@ public class ProductServicesImpl implements ProductServices {
                         HttpStatus.NOT_FOUND, "Produit introuvable : id=" + id));
     }
 
+    @Override
+    public Product findByRef(String ref) {
+        return repo.findFirstByReference(ref);
+    }
+
     // ── UPDATE ───────────────────────────────────────────────────
 
     @Override

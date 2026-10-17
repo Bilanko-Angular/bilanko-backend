@@ -11,5 +11,6 @@ public final class ProductApiRoutes {
     public static final String PRODUCTS_DELETE   = "/{id}";             // DELETE /api/products/{id}
     public static final String PRODUCTS_SEARCH   = "/search";           // GET /api/products/search
     public static final String PRODUCTS_STOCK    = "/stock-overview";   // GET /api/products/stock-overview
+    public static final String PRODUCT_BY_REF    = "/ref/{ref}";
 }
 

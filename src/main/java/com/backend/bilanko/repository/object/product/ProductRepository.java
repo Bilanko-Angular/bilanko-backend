@@ -57,4 +57,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             Pageable pageable);
+
+    Product findFirstByReference(String ref);
 }
