@@ -2,6 +2,7 @@ package com.backend.bilanko.controller.transaction;
 
 import com.backend.bilanko.DTO.transaction.sale.SaleRequestDTO;
 import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
+import com.backend.bilanko.DTO.shared.PageResponse;
 import com.backend.bilanko.DTO.summary.sale.SaleSummaryDTO;
 import com.backend.bilanko.DTO.summary.overview.SaleTimeSeriesPointDTO;
 import com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO;
@@ -35,12 +36,14 @@ public class SaleController {
     }
 
     @GetMapping(SaleApiRoutes.BASE)
-    public ResponseEntity<List<SaleResponseDTO>> getAllSales(
+    public ResponseEntity<PageResponse<SaleResponseDTO>> getAllSales(
             @AuthenticationPrincipal User currentUser,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return ResponseEntity.ok(saleService.getAllSales(currentUser, from, to));
+        return ResponseEntity.ok(saleService.getAllSalesPaged(currentUser, from, to, page, size));
     }
 
     @GetMapping(SaleApiRoutes.SUMMARY)
@@ -74,11 +77,13 @@ public class SaleController {
     }
 
     @GetMapping(SaleApiRoutes.SEARCH)
-    public ResponseEntity<List<SaleResponseDTO>> searchSales(
+    public ResponseEntity<PageResponse<SaleResponseDTO>> searchSales(
             @RequestParam String keyword,
-            @AuthenticationPrincipal User currentUser
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return ResponseEntity.ok(saleService.searchSales(keyword, currentUser));
+        return ResponseEntity.ok(saleService.searchSalesPaged(keyword, currentUser, page, size));
     }
 
     @GetMapping(SaleApiRoutes.BY_ID)
