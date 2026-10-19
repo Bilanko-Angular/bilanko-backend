@@ -21,6 +21,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.backend.bilanko.services.person.notification.NotificationService;
 import com.backend.bilanko.models.person.notification.NotificationType;
 
+import com.backend.bilanko.DTO.shared.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -84,6 +88,40 @@ public class SaleService {
         return saleRepository.searchByKeyword(currentUser, keyword.trim()).stream()
                 .map(SaleMapper::toDto)
                 .toList();
+    }
+
+    public PageResponse<SaleResponseDTO> getAllSalesPaged(
+            User currentUser, LocalDateTime from, LocalDateTime to, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saleDate"));
+        Page<Sale> result;
+        if (from == null && to == null) {
+            result = saleRepository.findByUserOrderBySaleDateDesc(currentUser, pageRequest);
+        } else {
+            if (from == null || to == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Les paramètres 'from' et 'to' doivent être fournis ensemble"
+                );
+            }
+            if (from.isAfter(to)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "La date 'from' ne peut pas être postérieure à 'to'"
+                );
+            }
+            result = saleRepository.findByUserAndSaleDateBetweenOrderBySaleDateDesc(currentUser, from, to, pageRequest);
+        }
+        return PageResponse.from(result.map(SaleMapper::toDto));
+    }
+
+    public PageResponse<SaleResponseDTO> searchSalesPaged(
+            String keyword, User currentUser, int page, int size) {
+        if (keyword == null || keyword.isBlank()) {
+            return new PageResponse<>(List.of(), page, size, 0, 0);
+        }
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Sale> result = saleRepository.searchByKeywordPaged(currentUser, keyword.trim(), pageRequest);
+        return PageResponse.from(result.map(SaleMapper::toDto));
     }
 
     public SaleSummaryDTO getSummary(User currentUser, LocalDateTime from, LocalDateTime to) {
