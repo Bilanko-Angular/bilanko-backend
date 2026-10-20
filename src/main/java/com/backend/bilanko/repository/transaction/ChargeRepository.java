@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -53,5 +54,34 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             org.springframework.data.domain.Pageable pageable);
+
+    // ---------------------------------------------------------------
+    // Merchant : liste paginée
+    // ---------------------------------------------------------------
+    Page<Charge> findByUserOrderByDateDesc(User user, Pageable pageable);
+
+    Page<Charge> findByUserAndDateBetweenOrderByDateDesc(User user, LocalDate from, LocalDate to, Pageable pageable);
+
+    // ---------------------------------------------------------------
+    // Merchant : recherche avec filtres optionnels
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT c FROM Charge c
+            WHERE c.user = :user
+              AND (:label     IS NULL OR LOWER(c.label)    LIKE LOWER(CONCAT('%', :label,    '%')))
+              AND (:supplier  IS NULL OR LOWER(c.supplier) LIKE LOWER(CONCAT('%', :supplier, '%')))
+              AND (:minAmount IS NULL OR c.amount >= :minAmount)
+              AND (:maxAmount IS NULL OR c.amount <= :maxAmount)
+              AND (CAST(:date AS date) IS NULL OR c.date = :date)
+            ORDER BY c.date DESC
+            """)
+    Page<Charge> searchByUser(
+            @Param("user")       User user,
+            @Param("label")      String label,
+            @Param("supplier")   String supplier,
+            @Param("minAmount")  BigDecimal minAmount,
+            @Param("maxAmount")  BigDecimal maxAmount,
+            @Param("date")       LocalDate date,
+            Pageable pageable);
 
 }

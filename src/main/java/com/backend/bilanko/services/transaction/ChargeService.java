@@ -11,12 +11,16 @@ import com.backend.bilanko.repository.concept.category.ChargeCategoryRepository;
 import com.backend.bilanko.repository.transaction.ChargeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.backend.bilanko.services.person.notification.NotificationService;
 import com.backend.bilanko.models.person.notification.NotificationType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,10 +64,43 @@ public class ChargeService {
         return ChargeMapper.toDto(saved);
     }
 
-    public List<ChargeResponseDTO> getAllCharges(User currentUser, LocalDate from, LocalDate to) {
-        return findCharges(currentUser, from, to).stream()
-                .map(ChargeMapper::toDto)
-                .toList();
+    public Page<ChargeResponseDTO> getAllCharges(User currentUser, LocalDate from, LocalDate to, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Charge> charges;
+        if (from == null && to == null) {
+            charges = chargeRepository.findByUserOrderByDateDesc(currentUser, pageable);
+        } else {
+            if (from == null || to == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Les paramètres 'from' et 'to' doivent être fournis ensemble"
+                );
+            }
+            if (from.isAfter(to)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "La date 'from' ne peut pas être postérieure à 'to'"
+                );
+            }
+            charges = chargeRepository.findByUserAndDateBetweenOrderByDateDesc(currentUser, from, to, pageable);
+        }
+        return charges.map(ChargeMapper::toDto);
+    }
+
+    public Page<ChargeResponseDTO> searchCharges(
+            User currentUser,
+            String label,
+            String supplier,
+            BigDecimal minAmount,
+            BigDecimal maxAmount,
+            LocalDate date,
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return chargeRepository
+                .searchByUser(currentUser, label, supplier, minAmount, maxAmount, date, pageable)
+                .map(ChargeMapper::toDto);
     }
 
     public ChargeSummaryDTO getSummary(User currentUser, LocalDate from, LocalDate to) {
@@ -103,6 +140,7 @@ public class ChargeService {
         chargeRepository.delete(charge);
     }
 
+    // Utilitaire conservé pour le calcul du summary (pas de pagination nécessaire)
     List<Charge> findCharges(User currentUser, LocalDate from, LocalDate to) {
         if (from == null && to == null) {
             return chargeRepository.findByUserOrderByDateDesc(currentUser);

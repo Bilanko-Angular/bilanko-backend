@@ -8,12 +8,14 @@ import com.backend.bilanko.services.transaction.ChargeService;
 import com.backend.bilanko.utils.routes.ChargeApiRoutes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,12 +35,30 @@ public class ChargeController {
     }
 
     @GetMapping(ChargeApiRoutes.BASE)
-    public ResponseEntity<List<ChargeResponseDTO>> getAllCharges(
+    public ResponseEntity<Page<ChargeResponseDTO>> getAllCharges(
             @AuthenticationPrincipal User currentUser,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "0")  int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return ResponseEntity.ok(chargeService.getAllCharges(currentUser, from, to));
+        return ResponseEntity.ok(chargeService.getAllCharges(currentUser, from, to, page, size));
+    }
+
+    @GetMapping(ChargeApiRoutes.SEARCH)
+    public ResponseEntity<Page<ChargeResponseDTO>> searchCharges(
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(required = false) String label,
+            @RequestParam(required = false) String supplier,
+            @RequestParam(required = false) BigDecimal minAmount,
+            @RequestParam(required = false) BigDecimal maxAmount,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(defaultValue = "0")  int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return ResponseEntity.ok(
+                chargeService.searchCharges(currentUser, label, supplier, minAmount, maxAmount, date, page, size)
+        );
     }
 
     @GetMapping(ChargeApiRoutes.SUMMARY)
