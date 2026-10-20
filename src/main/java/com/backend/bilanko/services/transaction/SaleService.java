@@ -24,6 +24,7 @@ import com.backend.bilanko.models.person.notification.NotificationType;
 import com.backend.bilanko.DTO.shared.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -180,55 +181,35 @@ public class SaleService {
         }
 
         String resolvedSort = resolveTopSort(sortBy);
-        List<Sale> sales = findSales(currentUser, from, to);
+        // On laisse la base faire le tri et la limitation : 1 seule requête SQL
+        Pageable pageable = PageRequest.of(0, limit);
 
-        Map<Long, Acc> byProduct = new LinkedHashMap<>();
-        for (Sale sale : sales) {
-            for (SaleItem item : sale.getItems()) {
-                Product product = item.getProduct();
-                Acc incoming = new Acc(
-                        product.getId(),
-                        product.getName(),
-                        product.getReference(),
-                        item.getQuantity(),
-                        item.getUnitSellingPrice() * item.getQuantity(),
-                        item.getMargin()
-                );
-                byProduct.merge(product.getId(), incoming, Acc::combine);
-            }
+        if (from == null && to == null) {
+            return switch (resolvedSort) {
+                case "revenue" -> saleRepository.findTopProductsByRevenue(currentUser, pageable);
+                case "margin"  -> saleRepository.findTopProductsByMargin(currentUser, pageable);
+                default        -> saleRepository.findTopProductsByQuantity(currentUser, pageable);
+            };
         }
 
-        Comparator<Acc> comparator = switch (resolvedSort) {
-            case "revenue" -> Comparator.comparingDouble(Acc::revenue).reversed();
-            case "margin" -> Comparator.comparingDouble(Acc::margin).reversed();
-            default -> Comparator.comparingLong(Acc::quantity).reversed();
-        };
-
-        return byProduct.values().stream()
-                .sorted(comparator)
-                .limit(limit)
-                .map(acc -> new TopSoldProductDTO(
-                        acc.productId(),
-                        acc.name(),
-                        acc.reference(),
-                        acc.quantity(),
-                        acc.revenue(),
-                        acc.margin()
-                ))
-                .toList();
-    }
-
-    private record Acc(long productId, String name, String reference, long quantity, double revenue, double margin) {
-        Acc combine(Acc other) {
-            return new Acc(
-                    productId,
-                    name,
-                    reference,
-                    quantity + other.quantity,
-                    revenue + other.revenue,
-                    margin + other.margin
+        if (from == null || to == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Les paramètres 'from' et 'to' doivent être fournis ensemble"
             );
         }
+        if (from.isAfter(to)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "La date 'from' ne peut pas être postérieure à 'to'"
+            );
+        }
+
+        return switch (resolvedSort) {
+            case "revenue" -> saleRepository.findTopProductsByRevenueAndPeriod(currentUser, from, to, pageable);
+            case "margin"  -> saleRepository.findTopProductsByMarginAndPeriod(currentUser, from, to, pageable);
+            default        -> saleRepository.findTopProductsByQuantityAndPeriod(currentUser, from, to, pageable);
+        };
     }
 
     @Transactional
