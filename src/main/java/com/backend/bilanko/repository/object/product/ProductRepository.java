@@ -1,6 +1,7 @@
 package com.backend.bilanko.repository.object.product;
 
 import com.backend.bilanko.models.object.product.Product;
+import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -80,4 +81,20 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> searchByUserEmailAndKeyword(
             @Param("email") String email,
             @Param("kw")    String keyword);
+
+    int countByUser_Id(Long userId);
+    long countByUserAndCreatedAtBetween(User user, Instant start, Instant end);
+
+    @Query("""
+        SELECT c.name 
+        FROM Product p 
+        JOIN p.categories c 
+        WHERE p.user = :user 
+        GROUP BY c.id, c.name 
+        ORDER BY COUNT(p) DESC
+        """)
+    List<String> findMostUsedCategoryName(@Param("user") User user, Pageable pageable);
+
+    @Query("SELECT COALESCE(AVG(p.price), 0.0) FROM Product p WHERE p.user = :user")
+    Double findAveragePriceByUser(@Param("user") User user);
 }

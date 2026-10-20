@@ -18,4 +18,5 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
                 INNER JOIN users u ON p.user_id=u.id
     """,nativeQuery = true)
     Long totalUser();
+
 }
