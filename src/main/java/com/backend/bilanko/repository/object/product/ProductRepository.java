@@ -59,4 +59,25 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             Pageable pageable);
 
     Product findFirstByReference(String ref);
+
+    // ---------------------------------------------------------------
+    // Recherche globale : filtre par keyword directement en BDD
+    // + JOIN FETCH des catégories pour éviter le N+1
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT DISTINCT p FROM Product p
+            LEFT JOIN FETCH p.categories c
+            WHERE p.user.email = :email
+            AND (
+                LOWER(p.name)      LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR LOWER(p.reference) LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR EXISTS (
+                    SELECT 1 FROM p.categories cat
+                    WHERE LOWER(cat.name) LIKE LOWER(CONCAT('%', :kw, '%'))
+                )
+            )
+            """)
+    List<Product> searchByUserEmailAndKeyword(
+            @Param("email") String email,
+            @Param("kw")    String keyword);
 }

@@ -68,6 +68,28 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             """)
     Page<Sale> searchByKeywordPaged(@Param("user") User user, @Param("keyword") String keyword, Pageable pageable);
 
+    // ---------------------------------------------------------------
+    // Recherche globale : filtre BDD + JOIN FETCH pour éviter le N+1
+    // Pageable permet de limiter à MAX_RESULTS_PER_TYPE directement en BDD
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT DISTINCT s FROM Sale s
+            LEFT JOIN FETCH s.items i
+            LEFT JOIN FETCH i.product p
+            LEFT JOIN FETCH p.categories
+            WHERE s.user = :user
+            AND (
+                LOWER(s.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(p.name)        LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(p.reference)   LIKE LOWER(CONCAT('%', :keyword, '%'))
+            )
+            ORDER BY s.saleDate DESC
+            """)
+    List<Sale> searchByKeywordFetched(
+            @Param("user")    User user,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
     @Query("SELECT SUM(s.totalAmount) FROM Sale s")
     Double sumAllTotalAmount();
 
