@@ -76,7 +76,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             SELECT DISTINCT s FROM Sale s
             LEFT JOIN FETCH s.items i
             LEFT JOIN FETCH i.product p
-            LEFT JOIN FETCH p.categories
             WHERE s.user = :user
             AND (
                 LOWER(s.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))
@@ -262,4 +261,32 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("from") LocalDateTime from,
             @Param("to") LocalDateTime to,
             Pageable pageable);
+
+    // 1. Récupère uniquement les IDs des ventes filtrées et paginées
+    @Query("""
+        SELECT DISTINCT s.id FROM Sale s
+        LEFT JOIN s.items i
+        LEFT JOIN i.product p
+        WHERE s.user = :user
+        AND (
+            LOWER(s.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+         OR LOWER(p.name)        LIKE LOWER(CONCAT('%', :keyword, '%'))
+         OR LOWER(p.reference)   LIKE LOWER(CONCAT('%', :keyword, '%'))
+        )
+        ORDER BY s.saleDate DESC
+        """)
+    List<Long> searchIdsByKeyword(
+            @Param("user")    User user,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
+    // 2. Charge les entités complètes avec JOIN FETCH sans conflit de pagination
+    @Query("""
+        SELECT DISTINCT s FROM Sale s
+        LEFT JOIN FETCH s.items i
+        LEFT JOIN FETCH i.product p
+        WHERE s.id IN :ids
+        ORDER BY s.saleDate DESC
+        """)
+    List<Sale> findAllByIdsFetched(@Param("ids") List<Long> ids);
 }

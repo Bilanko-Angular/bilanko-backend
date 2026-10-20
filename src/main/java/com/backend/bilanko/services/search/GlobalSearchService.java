@@ -16,29 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Service de recherche globale optimisé.
- *
- * <p>Trois axes d'optimisation par rapport à l'implémentation naïve :</p>
- * <ol>
- *   <li><b>Push-down BDD</b> : les requêtes JPQL filtrent par keyword (LIKE)
- *       directement en base, sans charger toutes les entités du user en mémoire.</li>
- *   <li><b>Élimination du N+1</b> : JOIN FETCH sur les associations eagerly chargées
- *       (Sale→items→product→categories, Charge→chargeCategory).</li>
- *   <li><b>Parallélisation @Async</b> : les trois requêtes indépendantes (produits,
- *       ventes, charges) sont lancées simultanément via le pool "searchExecutor".</li>
- * </ol>
- *
- * <p>Chaque source est limitée à {@value MAX_RESULTS_PER_TYPE} résultats directement
- * en BDD via {@link PageRequest}, ce qui donne un maximum de
- * {@code 3 × MAX_RESULTS_PER_TYPE} résultats fusionnés.</p>
- */
+
 @Service
 @RequiredArgsConstructor
 public class GlobalSearchService {
@@ -105,12 +86,22 @@ public class GlobalSearchService {
     @Async("searchExecutor")
     protected CompletableFuture<List<ScoredResult>> searchSales(String kw, User currentUser) {
         PageRequest page = PageRequest.of(0, MAX_RESULTS_PER_TYPE);
+
+        // Étape 1 : Récupération des IDs paginés
+        List<Long> saleIds = saleRepository.searchIdsByKeyword(currentUser, kw, page);
+
+        if (saleIds.isEmpty()) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+
+        // Étape 2 : Chargement complet avec JOIN FETCH (anti-N+1)
         List<ScoredResult> results = saleRepository
-                .searchByKeywordFetched(currentUser, kw, page)
+                .findAllByIdsFetched(saleIds)
                 .stream()
                 .map(s -> new ScoredResult("SALE", s.getId(), s.getCreatedAt(),
                         SaleMapper.toDto(s)))
                 .toList();
+
         return CompletableFuture.completedFuture(results);
     }
 
