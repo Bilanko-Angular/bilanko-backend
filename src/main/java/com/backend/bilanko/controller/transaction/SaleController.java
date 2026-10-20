@@ -1,5 +1,6 @@
 package com.backend.bilanko.controller.transaction;
 
+import com.backend.bilanko.DTO.summary.sale.SaleUserSummary;
 import com.backend.bilanko.DTO.transaction.sale.SaleRequestDTO;
 import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
 import com.backend.bilanko.DTO.shared.PageResponse;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,5 +112,10 @@ public class SaleController {
     ) {
         saleService.deleteSale(id, currentUser);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(SaleApiRoutes.USER_SUMMARY)
+    public ResponseEntity<SaleUserSummary> saleUserSummary(Authentication authentication){
+        return ResponseEntity.ok(saleService.getSummary(authentication.getName()));
     }
 }

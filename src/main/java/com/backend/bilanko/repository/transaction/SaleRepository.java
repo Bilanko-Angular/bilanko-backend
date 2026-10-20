@@ -289,4 +289,22 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
         ORDER BY s.saleDate DESC
         """)
     List<Sale> findAllByIdsFetched(@Param("ids") List<Long> ids);
+
+    long countByUser(User user);
+
+    long countByUserAndSaleDateBetween(User user, LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COALESCE(SUM(s.totalMargin), 0.0) FROM Sale s WHERE s.user = :user")
+    Double sumTotalMarginByUser(@Param("user") User user);
+
+    @Query("""
+            SELECT s.customerName 
+            FROM Sale s 
+            WHERE s.user = :user 
+              AND s.customerName IS NOT NULL 
+              AND TRIM(s.customerName) != '' 
+            GROUP BY s.customerName 
+            ORDER BY COUNT(s) DESC
+            """)
+    List<String> findTopCustomerBySalesCount(@Param("user") User user, Pageable pageable);
 }
