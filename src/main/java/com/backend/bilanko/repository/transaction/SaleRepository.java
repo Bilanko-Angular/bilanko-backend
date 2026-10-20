@@ -1,5 +1,6 @@
 package com.backend.bilanko.repository.transaction;
 
+import com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.models.transaction.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -103,4 +104,140 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             org.springframework.data.domain.Pageable pageable);
+
+    // ── Top produits agrégés directement en base (évite le N+1) ──────────────
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.quantity) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByQuantity(
+            @Param("user") User user,
+            Pageable pageable);
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.unitSellingPrice * i.quantity) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByRevenue(
+            @Param("user") User user,
+            Pageable pageable);
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.margin) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByMargin(
+            @Param("user") User user,
+            Pageable pageable);
+
+    // ── Avec filtre de dates ──────────────────────────────────────────────────
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+              AND s.saleDate >= :from
+              AND s.saleDate <= :to
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.quantity) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByQuantityAndPeriod(
+            @Param("user") User user,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to,
+            Pageable pageable);
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+              AND s.saleDate >= :from
+              AND s.saleDate <= :to
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.unitSellingPrice * i.quantity) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByRevenueAndPeriod(
+            @Param("user") User user,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to,
+            Pageable pageable);
+
+    @Query("""
+            SELECT new com.backend.bilanko.DTO.summary.overview.TopSoldProductDTO(
+                p.id,
+                p.name,
+                p.reference,
+                SUM(i.quantity),
+                SUM(i.unitSellingPrice * i.quantity),
+                SUM(i.margin)
+            )
+            FROM Sale s
+            JOIN s.items i
+            JOIN i.product p
+            WHERE s.user = :user
+              AND s.saleDate >= :from
+              AND s.saleDate <= :to
+            GROUP BY p.id, p.name, p.reference
+            ORDER BY SUM(i.margin) DESC
+            """)
+    List<TopSoldProductDTO> findTopProductsByMarginAndPeriod(
+            @Param("user") User user,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to,
+            Pageable pageable);
 }
