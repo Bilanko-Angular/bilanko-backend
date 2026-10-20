@@ -1,5 +1,6 @@
 package com.backend.bilanko.services.transaction;
 
+import com.backend.bilanko.DTO.summary.sale.SaleUserSummary;
 import com.backend.bilanko.DTO.transaction.sale.SaleItemRequestDTO;
 import com.backend.bilanko.DTO.transaction.sale.SaleRequestDTO;
 import com.backend.bilanko.DTO.transaction.sale.SaleResponseDTO;
@@ -13,6 +14,7 @@ import com.backend.bilanko.models.transaction.Sale;
 import com.backend.bilanko.models.transaction.SaleItem;
 import com.backend.bilanko.repository.transaction.SaleRepository;
 import com.backend.bilanko.repository.object.product.ProductRepository;
+import com.backend.bilanko.services.person.user.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -42,6 +48,7 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final ProductRepository productRepository;
     private final NotificationService notificationService;
+    public final UserServices userServices;
 
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO dto, User currentUser) {
@@ -350,5 +357,37 @@ public class SaleService {
         sale.getItems().addAll(items);
         sale.setTotalAmount(totalAmount);
         sale.setTotalMargin(totalMargin);
+    }
+    public SaleUserSummary getSummary(String email){
+        User user = userServices.findUserByEmail(email);
+        // 1. Total des ventes
+        long totalSales = saleRepository.countByUser(user);
+
+        // 2. Ventes du mois en cours
+        LocalDateTime startOfMonth = LocalDate.now()
+                .with(TemporalAdjusters.firstDayOfMonth())
+                .atStartOfDay();
+
+        LocalDateTime endOfMonth = LocalDate.now()
+                .with(TemporalAdjusters.lastDayOfMonth())
+                .atTime(LocalTime.MAX);
+
+        long monthlySales = saleRepository.countByUserAndSaleDateBetween(user, startOfMonth, endOfMonth);
+
+        // 3. Montant total des marges
+        double totalMargin = saleRepository.sumTotalMarginByUser(user);
+
+        // 4. Meilleur client (LIMIT 1 via PageRequest)
+        String bestCustomer = saleRepository.findTopCustomerBySalesCount(user, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse("Aucun client enregistre");
+
+        return SaleUserSummary.builder()
+                .bestCustomer(bestCustomer)
+                .monthlySales(monthlySales)
+                .totalMargin(totalMargin)
+                .totalSales(totalSales)
+                .build();
     }
 }

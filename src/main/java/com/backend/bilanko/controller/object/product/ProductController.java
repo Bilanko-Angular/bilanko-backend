@@ -3,6 +3,7 @@ package com.backend.bilanko.controller.object.product;
 import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
+import com.backend.bilanko.DTO.summary.product.ProductUserSummary;
 import com.backend.bilanko.mapper.ProductMapper;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.services.object.product.ProductServices;
@@ -109,5 +110,11 @@ public class ProductController {
         String email = authentication.getName();
         Page<ProductApiDTO> result = productServices.searchMyProducts(email, search, categoryId, stockStatus, page, size);
         return ResponseEntity.ok(result);
+    }
+
+    // GET /api/products/summary
+    @GetMapping(ProductApiRoutes.SUMMARY)
+    public ResponseEntity<ProductUserSummary> summary(Authentication authentication){
+        return ResponseEntity.ok(productServices.summary(authentication.getName()));
     }
 }

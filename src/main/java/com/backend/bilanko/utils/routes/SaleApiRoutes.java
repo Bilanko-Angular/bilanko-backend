@@ -7,6 +7,6 @@ public final class SaleApiRoutes {
     public static final String SEARCH = BASE + "/search";
     public static final String TIMESERIES = BASE + "/timeseries";
     public static final String TOP_PRODUCTS = BASE + "/top-products";
-
+    public static final String USER_SUMMARY  =BASE + "/user-summary";
     private SaleApiRoutes() {}
 }

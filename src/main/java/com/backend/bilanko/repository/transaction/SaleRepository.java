@@ -68,6 +68,27 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             """)
     Page<Sale> searchByKeywordPaged(@Param("user") User user, @Param("keyword") String keyword, Pageable pageable);
 
+    // ---------------------------------------------------------------
+    // Recherche globale : filtre BDD + JOIN FETCH pour éviter le N+1
+    // Pageable permet de limiter à MAX_RESULTS_PER_TYPE directement en BDD
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT DISTINCT s FROM Sale s
+            LEFT JOIN FETCH s.items i
+            LEFT JOIN FETCH i.product p
+            WHERE s.user = :user
+            AND (
+                LOWER(s.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(p.name)        LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(p.reference)   LIKE LOWER(CONCAT('%', :keyword, '%'))
+            )
+            ORDER BY s.saleDate DESC
+            """)
+    List<Sale> searchByKeywordFetched(
+            @Param("user")    User user,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
     @Query("SELECT SUM(s.totalAmount) FROM Sale s")
     Double sumAllTotalAmount();
 
@@ -240,4 +261,50 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("from") LocalDateTime from,
             @Param("to") LocalDateTime to,
             Pageable pageable);
+
+    // 1. Récupère uniquement les IDs des ventes filtrées et paginées
+    @Query("""
+        SELECT DISTINCT s.id FROM Sale s
+        LEFT JOIN s.items i
+        LEFT JOIN i.product p
+        WHERE s.user = :user
+        AND (
+            LOWER(s.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+         OR LOWER(p.name)        LIKE LOWER(CONCAT('%', :keyword, '%'))
+         OR LOWER(p.reference)   LIKE LOWER(CONCAT('%', :keyword, '%'))
+        )
+        ORDER BY s.saleDate DESC
+        """)
+    List<Long> searchIdsByKeyword(
+            @Param("user")    User user,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
+    // 2. Charge les entités complètes avec JOIN FETCH sans conflit de pagination
+    @Query("""
+        SELECT DISTINCT s FROM Sale s
+        LEFT JOIN FETCH s.items i
+        LEFT JOIN FETCH i.product p
+        WHERE s.id IN :ids
+        ORDER BY s.saleDate DESC
+        """)
+    List<Sale> findAllByIdsFetched(@Param("ids") List<Long> ids);
+
+    long countByUser(User user);
+
+    long countByUserAndSaleDateBetween(User user, LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COALESCE(SUM(s.totalMargin), 0.0) FROM Sale s WHERE s.user = :user")
+    Double sumTotalMarginByUser(@Param("user") User user);
+
+    @Query("""
+            SELECT s.customerName 
+            FROM Sale s 
+            WHERE s.user = :user 
+              AND s.customerName IS NOT NULL 
+              AND TRIM(s.customerName) != '' 
+            GROUP BY s.customerName 
+            ORDER BY COUNT(s) DESC
+            """)
+    List<String> findTopCustomerBySalesCount(@Param("user") User user, Pageable pageable);
 }

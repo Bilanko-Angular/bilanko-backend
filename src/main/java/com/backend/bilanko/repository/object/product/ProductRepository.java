@@ -1,6 +1,7 @@
 package com.backend.bilanko.repository.object.product;
 
 import com.backend.bilanko.models.object.product.Product;
+import com.backend.bilanko.models.person.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -59,4 +60,41 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             Pageable pageable);
 
     Product findFirstByReference(String ref);
+
+    // ---------------------------------------------------------------
+    // Recherche globale : filtre par keyword directement en BDD
+    // + JOIN FETCH des catégories pour éviter le N+1
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT DISTINCT p FROM Product p
+            LEFT JOIN FETCH p.categories c
+            WHERE p.user.email = :email
+            AND (
+                LOWER(p.name)      LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR LOWER(p.reference) LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR EXISTS (
+                    SELECT 1 FROM p.categories cat
+                    WHERE LOWER(cat.name) LIKE LOWER(CONCAT('%', :kw, '%'))
+                )
+            )
+            """)
+    List<Product> searchByUserEmailAndKeyword(
+            @Param("email") String email,
+            @Param("kw")    String keyword);
+
+    int countByUser_Id(Long userId);
+    long countByUserAndCreatedAtBetween(User user, Instant start, Instant end);
+
+    @Query("""
+        SELECT c.name 
+        FROM Product p 
+        JOIN p.categories c 
+        WHERE p.user = :user 
+        GROUP BY c.id, c.name 
+        ORDER BY COUNT(p) DESC
+        """)
+    List<String> findMostUsedCategoryName(@Param("user") User user, Pageable pageable);
+
+    @Query("SELECT COALESCE(AVG(p.price), 0.0) FROM Product p WHERE p.user = :user")
+    Double findAveragePriceByUser(@Param("user") User user);
 }

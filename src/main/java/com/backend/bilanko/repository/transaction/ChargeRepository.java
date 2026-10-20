@@ -84,4 +84,25 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
             @Param("date")       LocalDate date,
             Pageable pageable);
 
+    // ---------------------------------------------------------------
+    // Recherche globale : filtre par keyword directement en BDD
+    // + JOIN FETCH de chargeCategory pour éviter le N+1
+    // ---------------------------------------------------------------
+    @Query("""
+            SELECT c FROM Charge c
+            LEFT JOIN FETCH c.chargeCategory
+            WHERE c.user = :user
+            AND (
+                LOWER(c.label)    LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR LOWER(c.supplier) LIKE LOWER(CONCAT('%', :kw, '%'))
+             OR (c.chargeCategory IS NOT NULL
+                 AND LOWER(c.chargeCategory.name) LIKE LOWER(CONCAT('%', :kw, '%')))
+            )
+            ORDER BY c.date DESC
+            """)
+    List<Charge> searchByUserAndKeyword(
+            @Param("user") User user,
+            @Param("kw")   String keyword,
+            Pageable pageable);
+
 }

@@ -14,12 +14,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +42,12 @@ class GlobalSearchServiceTest {
     @InjectMocks
     private GlobalSearchService service;
 
+    // -------------------------------------------------------------------------
+    // Les méthodes @Async ne s'exécutent PAS de façon asynchrone en test unitaire
+    // (pas de contexte Spring), donc on peut appeler service.search() directement.
+    // Les nouveaux mocks ciblent les méthodes de recherche optimisées.
+    // -------------------------------------------------------------------------
+
     @Test
     void searchesProductsSalesAndChargesByStringFields() {
         User merchant = User.builder().email("merchant@example.com").build();
@@ -47,7 +58,7 @@ class GlobalSearchServiceTest {
                 .build();
         Charge charge = Charge.builder().label("Transport café").supplier("Fournisseur local").build();
 
-        givenMerchantData(product, sale, charge);
+        givenMerchantData(List.of(product), List.of(sale), List.of(charge));
 
         List<GlobalSearchResultDTO> results = service.search("CAFÉ", merchant);
 
@@ -56,17 +67,33 @@ class GlobalSearchServiceTest {
     }
 
     @Test
-    void limitsCombinedResultsToTenWithoutPagination() {
+    void limitsResultsToFivePerType() {
         User merchant = User.builder().email("merchant@example.com").build();
-        List<Product> products = java.util.stream.IntStream.range(0, 12)
-                .mapToObj(index -> Product.builder().name("matching-" + index).reference("ref-" + index).build())
+
+        // La BDD retourne exactement MAX_RESULTS_PER_TYPE résultats par source
+        List<Product> products = IntStream.range(0, GlobalSearchService.MAX_RESULTS_PER_TYPE)
+                .mapToObj(i -> Product.builder().name("matching-" + i).reference("ref-" + i).build())
                 .toList();
-        givenMerchantData(products, List.of(), List.of());
+        List<Sale> sales = IntStream.range(0, GlobalSearchService.MAX_RESULTS_PER_TYPE)
+                .mapToObj(i -> Sale.builder().customerName("matching-" + i).build())
+                .toList();
+        List<Charge> charges = IntStream.range(0, GlobalSearchService.MAX_RESULTS_PER_TYPE)
+                .mapToObj(i -> Charge.builder().label("matching-" + i).build())
+                .toList();
+
+        givenMerchantData(products, sales, charges);
 
         List<GlobalSearchResultDTO> results = service.search("matching", merchant);
 
-        assertThat(results).hasSize(10);
-        assertThat(results).allMatch(result -> result.type().equals("PRODUCT"));
+        // 5 produits + 5 ventes + 5 charges = 15 max
+        assertThat(results).hasSize(GlobalSearchService.MAX_RESULTS_PER_TYPE * 3);
+        assertThat(results).extracting(GlobalSearchResultDTO::type)
+                .containsExactlyInAnyOrderElementsOf(
+                        IntStream.range(0, GlobalSearchService.MAX_RESULTS_PER_TYPE)
+                                .boxed()
+                                .flatMap(i -> List.of("PRODUCT", "SALE", "CHARGE").stream())
+                                .toList()
+                );
     }
 
     @Test
@@ -78,15 +105,16 @@ class GlobalSearchServiceTest {
                 .hasMessageContaining("keyword");
     }
 
-    private void givenMerchantData(Product product, Sale sale, Charge charge) {
-        givenMerchantData(List.of(product), List.of(sale), List.of(charge));
-    }
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
 
     private void givenMerchantData(List<Product> products, List<Sale> sales, List<Charge> charges) {
-        when(productRepository.findByUserEmail("merchant@example.com")).thenReturn(products);
-        when(saleRepository.findByUserOrderBySaleDateDesc(org.mockito.ArgumentMatchers.any(User.class)))
+        when(productRepository.searchByUserEmailAndKeyword(anyString(), anyString()))
+                .thenReturn(products);
+        when(saleRepository.searchByKeywordFetched(any(User.class), anyString(), any(Pageable.class)))
                 .thenReturn(sales);
-        when(chargeRepository.findByUserOrderByDateDesc(org.mockito.ArgumentMatchers.any(User.class)))
+        when(chargeRepository.searchByUserAndKeyword(any(User.class), anyString(), any(Pageable.class)))
                 .thenReturn(charges);
     }
 }

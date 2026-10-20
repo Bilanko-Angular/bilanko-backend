@@ -3,6 +3,7 @@ package com.backend.bilanko.services.object.product;
 import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
+import com.backend.bilanko.DTO.summary.product.ProductUserSummary;
 import com.backend.bilanko.models.object.product.Product;
 import org.springframework.data.domain.Page;
 
@@ -34,4 +35,6 @@ public interface ProductServices {
     Page<ProductApiDTO> searchMyProducts(String email, String search, Long categoryId, String stockStatus, int page, int size);
 
     StockOverviewDTO getStockOverview(String email);
+
+    ProductUserSummary summary(String email);
 }

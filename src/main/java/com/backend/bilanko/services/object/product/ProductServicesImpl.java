@@ -3,6 +3,7 @@ package com.backend.bilanko.services.object.product;
 import com.backend.bilanko.DTO.object.product.ProductApiDTO;
 import com.backend.bilanko.DTO.object.product.ProductDTO;
 import com.backend.bilanko.DTO.object.product.StockOverviewDTO;
+import com.backend.bilanko.DTO.summary.product.ProductUserSummary;
 import com.backend.bilanko.models.concept.category.ProductCategory;
 import com.backend.bilanko.models.object.product.Product;
 import com.backend.bilanko.models.person.user.User;
@@ -21,6 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
@@ -160,6 +166,34 @@ public class ProductServicesImpl implements ProductServices {
                 stockValueAtPurchase,
                 stockValueAtSale
         );
+    }
+
+    @Override
+    public ProductUserSummary summary(String email) {
+        User user = userServices.findUserByEmail(email);
+        ZoneId zoneId = ZoneId.systemDefault(); // ou ZoneOffset.UTC
+        Double avgPrice = repo.findAveragePriceByUser(user);
+        // Début du mois à 00:00:00
+        Instant startOfMonth = LocalDate.now()
+                .with(TemporalAdjusters.firstDayOfMonth())
+                .atStartOfDay(zoneId)
+                .toInstant();
+
+        // Fin du mois à 23:59:59.999999999
+        Instant endOfMonth = LocalDate.now()
+                .with(TemporalAdjusters.lastDayOfMonth())
+                .atTime(LocalTime.MAX)
+                .atZone(zoneId)
+                .toInstant();
+        return ProductUserSummary.builder()
+                .total(repo.countByUser_Id(user.getId()))
+                .onTheMount(repo.countByUserAndCreatedAtBetween(user, startOfMonth, endOfMonth))
+                .mainCategory(repo.findMostUsedCategoryName(user, PageRequest.of(0, 1))
+                        .stream()
+                        .findFirst()
+                        .orElse(null))
+                .averagePrice(Math.round(avgPrice * 100.0) / 100.0)
+                .build();
     }
 
     // ── HELPERS ──────────────────────────────────────────────────
