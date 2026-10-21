@@ -105,4 +105,25 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
             @Param("kw")   String keyword,
             Pageable pageable);
 
+    // 1. Nombre total de charges pour l'utilisateur
+    long countByUser(User user);
+
+    // 2. Nombre de charges sur le mois en cours
+    long countByUserAndDateBetween(User user, LocalDate start, LocalDate end);
+
+    // 3. Fournisseur chez qui on a le plus dépensé (Somme des montants DESC)
+    @Query("""
+            SELECT c.supplier 
+            FROM Charge c 
+            WHERE c.user = :user 
+              AND c.supplier IS NOT NULL 
+              AND TRIM(c.supplier) != '' 
+            GROUP BY c.supplier 
+            ORDER BY SUM(c.amount) DESC
+            """)
+    List<String> findTopSupplierByTotalAmount(@Param("user") User user, Pageable pageable);
+
+    // 4. Prix moyen d'une charge
+    @Query("SELECT COALESCE(AVG(c.amount), 0.0) FROM Charge c WHERE c.user = :user")
+    Double findAverageChargeAmountByUser(@Param("user") User user);
 }

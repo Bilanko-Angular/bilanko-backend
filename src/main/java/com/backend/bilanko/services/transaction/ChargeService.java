@@ -1,5 +1,6 @@
 package com.backend.bilanko.services.transaction;
 
+import com.backend.bilanko.DTO.summary.charge.ChargeUserSummary;
 import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
 import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
@@ -9,6 +10,7 @@ import com.backend.bilanko.mapper.ChargeMapper;
 import com.backend.bilanko.models.person.user.User;
 import com.backend.bilanko.repository.concept.category.ChargeCategoryRepository;
 import com.backend.bilanko.repository.transaction.ChargeRepository;
+import com.backend.bilanko.services.person.user.UserServices;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import com.backend.bilanko.models.person.notification.NotificationType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
@@ -31,6 +34,7 @@ public class ChargeService {
     private final ChargeRepository chargeRepository;
     private final ChargeCategoryRepository chargeCategoryRepository;
     private final NotificationService notificationService;
+    private final UserServices userServices;
 
     @Transactional
     public ChargeResponseDTO createCharge(ChargeRequestDTO dto, User currentUser) {
@@ -165,5 +169,32 @@ public class ChargeService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Charge introuvable : id=" + id
                 ));
+    }
+
+    public ChargeUserSummary getChargeSummary(User currentUser) {
+        // 1. Nombre total de charges
+        long totalCharges = chargeRepository.countByUser(currentUser);
+
+        // 2. Nombre de charges ce mois-ci
+        LocalDate startOfMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        long monthlyCharges = chargeRepository.countByUserAndDateBetween(currentUser, startOfMonth, endOfMonth);
+
+        // 3. Fournisseur ayant le plus gros montant cumulé
+        String topSupplier = chargeRepository.findTopSupplierByTotalAmount(currentUser, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse("Aucun fournisseur");
+
+        // 4. Montant moyen d'une charge (arrondi à 2 décimales)
+        double avgAmount = chargeRepository.findAverageChargeAmountByUser(currentUser);
+        double roundedAverage = Math.round(avgAmount * 100.0) / 100.0;
+
+        return new ChargeUserSummary(
+                totalCharges,
+                monthlyCharges,
+                topSupplier,
+                roundedAverage
+        );
     }
 }

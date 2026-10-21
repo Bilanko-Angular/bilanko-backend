@@ -1,5 +1,6 @@
 package com.backend.bilanko.controller.transaction;
 
+import com.backend.bilanko.DTO.summary.charge.ChargeUserSummary;
 import com.backend.bilanko.DTO.transaction.charge.ChargeRequestDTO;
 import com.backend.bilanko.DTO.transaction.charge.ChargeResponseDTO;
 import com.backend.bilanko.DTO.summary.charge.ChargeSummaryDTO;
@@ -32,6 +33,11 @@ public class ChargeController {
     ) {
         ChargeResponseDTO response = chargeService.createCharge(dto, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping(ChargeApiRoutes.USER_SUMMARY)
+    public ResponseEntity<ChargeUserSummary> getUserChargeSummary(@AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(chargeService.getChargeSummary(currentUser));
     }
 
     @GetMapping(ChargeApiRoutes.BASE)
