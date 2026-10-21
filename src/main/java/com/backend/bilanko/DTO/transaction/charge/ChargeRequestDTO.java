@@ -15,7 +15,6 @@ public record ChargeRequestDTO(
         double amount,
         @NotNull
         LocalDate date,
-        
         Long categoryId
 ) {
 }

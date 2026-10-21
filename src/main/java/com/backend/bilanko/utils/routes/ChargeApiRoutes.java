@@ -5,6 +5,7 @@ public final class ChargeApiRoutes {
     public static final String BY_ID = BASE + "/{id}";
     public static final String SUMMARY = BASE + "/summary";
     public static final String SEARCH = BASE + "/search";
+    public static final String USER_SUMMARY = BASE + "/user-summary";
 
     private ChargeApiRoutes() {
     }
